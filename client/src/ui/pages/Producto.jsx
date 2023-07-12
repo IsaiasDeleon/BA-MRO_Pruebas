@@ -52,14 +52,23 @@ export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClic
         }
     },[clickProducto]);
     function createMail(){
-        axios.post(URLServer+"mailNode",{"idProduct":clickProducto, "idUser": idU, "Oferta" : valueOferta }).then((response) => {
-             //Enviamos el mensaje a las notificaciones para mostrar la alerta al usuario
-             setNotiCarrito(response.data)
-             setActiveNoti(true)
-             setTimeout(() => {
-                 setActiveNoti(false)
-             }, 4000);
-        })
+        fetch(`https://ba-mro.mx/Server/Correo.php?IP=${clickProducto}&IU=${idU}&Oferta=${valueOferta}`)
+            .then(response => {
+                setNotiCarrito("CorreoEnviado")
+                setActiveNoti(true)
+                setTimeout(() => {
+                    setActiveNoti(false)
+                }, 4000);
+            })
+            .catch(error => {
+                // Ocurrió un error en la solicitud AJAX
+                // Realiza cualquier acción de manejo de errores aquí si es necesario
+            });
+
+
+        // window.open(`https://ba-mro.mx/Server/Correo.php?IP=${clickProducto}&IU=${idU}&Oferta=${valueOferta}`, '_blank');
+             
+ 
     }
     const onInputChange2 = ({ target }) => {
         const { name, value } = target;
@@ -134,7 +143,7 @@ export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClic
                         </div>
                         <div className="text-end">
                             {/* <button className="btn btn-success m-1">¡Cómpralo ahora!</button> */}
-                            {/* <button className="btn btn-primary m-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">Hacer oferta</button> */}
+                            <button className="btn btn-primary m-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">Hacer oferta</button>
                             <button className="btn btn-dark m-1" onClick={(e) => {setIdCard2(clickProducto)}}>Agregar al carrito de compras</button>
                             <button className="btn btn-secondary m-1" onClick={(e) => { setIdCard(clickProducto)}}>Agregar a lista de favoritos</button>
                             {

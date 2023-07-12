@@ -36,7 +36,7 @@
 }
 
 .OpcionesFont {
-  font-size: var(--h3-font-size);
+  font-size: var(--normal-font-size);
 }
 
 .HeadEnlaces {
@@ -771,7 +771,7 @@ output .span--hidden {
     font-size: 14px;
     font-weight: 500;
     font-family: Roboto, sans-serif;
-    
+    margin-top: 20px;
 }
 @media (max-width: 1440px) {
   .contenedorC {

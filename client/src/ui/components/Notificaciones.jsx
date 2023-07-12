@@ -74,7 +74,7 @@ export const Noti = ({ notiCarrito, activeNoti }) => {
         color = "danger";
     }
     else if(notiCarrito == "CorreoEnviado"){
-        message = "Tu oferta fue enviada al proveedor";
+        message = "La oferta fue enviada al proveedor, mantente alerta a tus notificaciones por si acepta la oferta o te hace una contra oferta";
         color = "success";
     }
     else if( notiCarrito == "errorCorreo"){
@@ -143,6 +143,9 @@ export const Noti = ({ notiCarrito, activeNoti }) => {
         color="danger";
     }else if(notiCarrito === "RegistroUsuario"){
         message = "El usuario se registro con exito, ya puedes iniciar sesión";
+        color="success";
+    }else if(notiCarrito === "ContraRechazada"){
+        message = "Contra oferta rechazada. se le notificara al proveedor";
         color="success";
     }
     

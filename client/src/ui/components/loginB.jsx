@@ -3,7 +3,7 @@ import { GoogleLogin } from "react-google-login";
 import axios from "axios";
 import { AuthContext } from "../../auth/AuthContext";
 import { useNavigate } from "react-router";
-const clientId = "985696747479-h8l7tqvvvtf7ke939nghvkbogkkjjev6.apps.googleusercontent.com";
+const clientId = "834174042599-ok7fjvug6opngk4devckt6kgcrc3iclf.apps.googleusercontent.com";
 
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
