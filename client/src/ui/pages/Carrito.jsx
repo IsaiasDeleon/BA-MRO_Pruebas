@@ -121,6 +121,18 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
         }
         
     }
+    function Comprar(){
+        let ids = [];
+        let cantidadByProducto = [];
+        elementsCarrito.map((element) => {
+            ids.push(element.id);
+            let elements = document.getElementById(`VItem${element.id}`).value;
+            cantidadByProducto.push(elements);
+        });
+        if(idU !== undefined){
+            window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}`, '_blank');
+        }
+    }
     const navigate = useNavigate();
     function inicio (){
         
@@ -160,7 +172,7 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
                         <h4 className=" fw-bold text-success TotalesFont">${totalPrecio}</h4>
                     </div>
                     <div className=" text-center">
-                        <button className="btn btn-success btn-lg m-2">Comprar</button>
+                        <button className="btn btn-success btn-lg m-2" onClick={ () => Comprar()}>Comprar</button>
                         <button className="btn btn-light btn-lg m-2" onClick={ () => Cotizar()}>Cotizar</button>
                     </div>
                 </div>
