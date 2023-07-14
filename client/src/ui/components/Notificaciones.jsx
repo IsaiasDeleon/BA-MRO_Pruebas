@@ -77,6 +77,10 @@ export const Noti = ({ notiCarrito, activeNoti }) => {
         message = "La oferta fue enviada al proveedor, mantente alerta a tus notificaciones por si acepta la oferta o te hace una contra oferta";
         color = "success";
     }
+    else if(notiCarrito == "CorreoEnviado2"){
+        message = "¡Gracias por su compra se le envio información a su correo!";
+        color = "success";
+    }
     else if( notiCarrito == "errorCorreo"){
         message = "Algo salio mal porfavor recarga la pagina y vuelve a internatrlo.";
         color = "danger";

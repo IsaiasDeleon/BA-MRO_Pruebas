@@ -9,16 +9,19 @@ import { Head2 } from "../ui/components/Head2";
 import { Carrito } from "../ui/pages/Carrito";
 import { EditarPerfil } from "../ui/pages/EditarPerfil";
 import { Producto } from "../ui/pages/Producto";
-import { Navigate, Route, Routes } from "react-router";
+import { Navigate, Route, Routes, useNavigate } from "react-router";
 import { Login } from "../ui/pages/Login";
 import { MyProducts } from "../ui/pages/myProducts";
 import { NewProduct } from "../ui/pages/NewProduct";
+import { ComprasProduct } from "../ui/pages/Compras";
 const URLServer = "http://192.168.100.18:3020/"
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
 
 export const AppRoute = () => { 
+
+            const navigate = useNavigate();
             //Obtenemos el id logueado
             const { user } = useContext( AuthContext );
             let idU = user?.id;
@@ -193,6 +196,20 @@ export const AppRoute = () => {
                 }
                 
             }
+            function ComprarProductoNoti(id){
+                if( idU !== undefined){
+                    HTTP.post("/ComprarPoductoNoti",{"idU":idU, "id":id}).then((response) => {
+                        console.log(response?.data?.[0]?.ContraOferta)
+                        
+                        setMenu(2);
+                        navigate('/Compras', {
+                            replace: true,
+                            state: response.data?.[0]
+                        })
+                    })
+                }
+            }
+
             useEffect(() => {
                 if(clickProducto !== undefined){
                     localStorage.setItem('idProduct', JSON.stringify(clickProducto))
@@ -260,13 +277,14 @@ export const AppRoute = () => {
                 <Route path="/Login" element={<Login setMenu={setMenu}/>} />
                 <Route path="MisProductos" element={<MyProducts setMenu={setMenu}/>}/>
                 <Route path="ProductoNuevo" element={<NewProduct imagesArray={imagesArray} setImagenesArray={setImagenesArray} setMenu={setMenu} busquedas={busquedas} />} />
+                <Route path="Compras" element={<ComprasProduct setMenu={setMenu} />} />
             </Routes>
             {
                 
                 menu  === 1
                 ? (
                     <>
-                        <Head setEstadoMenu={setEstadoMenu} numArticulos={numArticulos} numGustos={numGustos} numNoti={numNoti} elemntsGustos={elemntsGustos} DeleteItemGustos={DeleteItemGustos} setMenu={setMenu} clickProducto={clickProducto} setClickProducto={setClickProducto}  setFiltros={setFiltros} filtros={filtros} elemntsNoti={elemntsNoti} EliminarNotiFicacion={EliminarNotiFicacion} />
+                        <Head setEstadoMenu={setEstadoMenu} numArticulos={numArticulos} numGustos={numGustos} numNoti={numNoti} elemntsGustos={elemntsGustos} DeleteItemGustos={DeleteItemGustos} setMenu={setMenu} clickProducto={clickProducto} setClickProducto={setClickProducto}  setFiltros={setFiltros} filtros={filtros} elemntsNoti={elemntsNoti} EliminarNotiFicacion={EliminarNotiFicacion} ComprarProductoNoti={ComprarProductoNoti} />
                         <Menu estado={estadoMenu} setEstadoMenu={setEstadoMenu} setFiltros={setFiltros} filtros={filtros} setValue={setValue} value={value} dataCategrorias={dataCategrorias} />
                     </>
                 )

@@ -1,10 +1,10 @@
 
-export const CardNoti = ({ id, img, descripcion, monto, EliminarNotiFicacion,empresa,ContraOferta, setClickProducto, montoOferta, Oferta}) => {
+export const CardNoti = ({ id, img, descripcion, monto, EliminarNotiFicacion,empresa,ContraOferta, setClickProducto, montoOferta, Oferta, ComprarProductoNoti}) => {
     function EliminarNoti(id){
         EliminarNotiFicacion(id)
     }
-    function ProductoShow(id) {
-        setClickProducto(id)
+    function ComprarProductoN(id) {
+        ComprarProductoNoti(id)
         
     }
     let images = img?.split(',');
@@ -29,7 +29,7 @@ export const CardNoti = ({ id, img, descripcion, monto, EliminarNotiFicacion,emp
                                 Oferta == 1 ? <h5> OFERTA: <b className="text-success">${montoOferta} </b></h5> : <></>
                             } */}
                       
-                        <button className="btn btn-dark ms-4" >Aceptar contra oferta</button>  
+                        <button className="btn btn-dark ms-4" onClick={() => ComprarProductoN(id)}>Aceptar</button>  
                         <button className="btn btn-secondary ms-4" onClick={() => EliminarNoti(id)}>Rechazar</button>    
                         {/* <i onClick={() => EliminarGusto(id)} className="bi bi-trash IconoBasura"></i> */}
                     

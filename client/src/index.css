@@ -64,7 +64,52 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+body {
+  background-color: #f8f9fa;
+}
 
+.container-fluid {
+  padding: 20px 40px;
+}
+
+.product-details,
+.buyer-details {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 40px;
+  padding-left: 60px;
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.product-image {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 5px;
+ 
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.h2Compras {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.pCompras {
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+
+
+
+.confirmed{
+  animation-name: moveImage;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+}
 /* Estilo para el head */
 .contenedorH {
   width: 80%;

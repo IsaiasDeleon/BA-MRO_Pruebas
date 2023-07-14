@@ -85,21 +85,25 @@ export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClic
     }
     
     const handleDownload = () => {
-        axios.post(URLServer+'download',{
-            pdf:datosProducto?.[0]?.PDF
-        }, {
-            responseType: 'blob'
-        }).then(response => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
+        if(datosProducto?.[0]?.PDF){
+            window.open(`https://ba-mro.mx/Server/PDF/${datosProducto?.[0]?.PDF}`, '_blank');
+        }
+        
+        // axios.post(URLServer+'download',{
+        //     pdf:datosProducto?.[0]?.PDF
+        // }, {
+        //     responseType: 'blob'
+        // }).then(response => {
+        //   const url = window.URL.createObjectURL(new Blob([response.data]));
     
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('download', 'archivo.pdf');
+        //   const link = document.createElement('a');
+        //   link.href = url;
+        //   link.setAttribute('download', 'archivo.pdf');
           
-          document.body.appendChild(link);
+        //   document.body.appendChild(link);
           
-          link.click();
-        });
+        //   link.click();
+        // });
       }
       return (
         <>
