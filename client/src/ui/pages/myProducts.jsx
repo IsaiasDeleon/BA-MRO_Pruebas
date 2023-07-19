@@ -18,7 +18,7 @@ export const MyProducts = ({ setMenu }) => {
 
     const [notiCarrito, setNotiCarrito] = useState();
     const [activeNoti, setActiveNoti] = useState();
-
+    const [idNoti, setIdNoti] = useState();
 
     function getMyProducts() {
         HTTP.post("/getMyProducts",{"idU": idU }).then((response) => {
@@ -70,6 +70,14 @@ export const MyProducts = ({ setMenu }) => {
 
 
     }
+    function message(mess,id) {
+        setNotiCarrito(`${mess}`);
+        setIdNoti(id);
+        setActiveNoti(true)
+        setTimeout(() => {
+            setActiveNoti(false)
+        }, 5000);
+    }
     function saveAll() {
         let datos = [];
        const d =  productos.map(async (element) => {
@@ -88,6 +96,46 @@ export const MyProducts = ({ setMenu }) => {
             let TempodeEntrega = document.getElementById(`TempodeEntregaIN${id}`).value;
             let TempoDdeEntregaAgotado = document.getElementById(`TempoDdeEntregaAgotadoIN${id}`).value;
             let pdf = document.getElementById(`file${id}`);
+            if(Categoria === ""){
+                message("CategoriaAll", id);
+                return;
+            }
+            if (Stock === 0 || Stock === undefined) {
+                message("StockAll", id)
+                return;
+            }
+            if (Descripcion === "") {
+                message("descripcionAll", id)
+                return;
+            }
+            if (Precio === undefined || Precio === 0) {
+                message("PrecioAll", id)
+                return;
+            }
+            if (Nombre === "") {
+                message("NombreAll", id)
+                return;
+            }
+            if (TempodeEntrega === "") {
+                message("TiempoENAll", id)
+                return;
+            }
+            if(Marca === ""){
+                message("MarcaENAll", id);
+                return;
+            }
+            if(CodigoProveedor === ""){
+                message("CodigoProveedorAll", id);
+                return;
+            }
+            if(Peso === ""){
+                message("PesoINAll", id);
+                return;
+            }
+            if(TempoDdeEntregaAgotado === ""){
+                message("TempoDdeEntregaAgotadoINAll", id);
+                return;
+            }
             let file = pdf.files[0];
             console.log(file + "-" + id)
             let arr;
@@ -130,7 +178,7 @@ export const MyProducts = ({ setMenu }) => {
             </div>
             <BtnProducto />
             <BtnSaveAll saveAll={saveAll} />
-            <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} />
+            <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} ide={idNoti} />
         </>
     )
 }

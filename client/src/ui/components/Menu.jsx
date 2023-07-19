@@ -133,15 +133,16 @@ export const Menu = ({ estado, setEstadoMenu, setFiltros, filtros, setValue, val
                                 value={value}
                                 onChange={handleChange}
                                 min={1}
-                                max={5000}
+                                max={25000}
                                 valueLabelDisplay="on"
-                                step={50}
+                                step={15000}
                                 getAriaValueText={valuetext}
                                 color="warning"
                                 onChangeCommitted={FiltValor}
                             />
-                            <h6 className='text-white text-slider'>$5000</h6>
+                            <h6 className='text-white text-slider'>$25,000</h6>
                         </Stack>
+
 
                     </div>
                 </div>

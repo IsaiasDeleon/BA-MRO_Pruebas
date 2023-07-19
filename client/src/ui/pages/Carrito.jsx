@@ -18,7 +18,21 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
     const [notiCarrito, setNotiCarrito] = useState();
     const [activeNoti, setActiveNoti] = useState();
     const [imgProducts, setImgProducts] = useState(true);
+    const [valueCP, setValueCP] = useState("");
+    const [valueUbi, setValueUbi] = useState("");
 
+    const onInputChange2 = ({ target }) => {
+        const { name, value } = target;
+        switch (name) {
+            case 'Ubicación':
+                setValueUbi(value);
+                break;
+            case 'CP':
+                setValueCP(value);
+                break;
+           
+        }
+    }
     //Function para obtener los elementos en el carrito
     function getItemCarrito() {
         if( idU !== undefined ){
@@ -101,7 +115,7 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
                         num = num + element;
                     })
                     setNumArticulos(num)
-                    setTotalPrecio(total)
+                    setTotalPrecio(total.toFixed(2))
                 }  
             })
            
@@ -129,14 +143,17 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             let elements = document.getElementById(`VItem${element.id}`).value;
             cantidadByProducto.push(elements);
         });
-        if(idU !== undefined){
-            window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}`, '_blank');
+        if(valueUbi !=="" & valueCP !==""){
+            if(idU !== undefined){
+                window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}&Ubi=${valueUbi}&CP=${valueCP}`, '_blank');
+            }
+        }else{
+            alert("Ubicacion o CP vacio")
         }
+       
     }
     const navigate = useNavigate();
     function inicio (){
-        
-          
             navigate('/Inicio', {
                 replace: true
             })
@@ -172,12 +189,39 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
                         <h4 className=" fw-bold text-success TotalesFont">${totalPrecio}</h4>
                     </div>
                     <div className=" text-center">
-                        <button className="btn btn-success btn-lg m-2" onClick={ () => Comprar()}>Comprar</button>
+                        <button className="btn btn-success btn-lg m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" >Comprar</button>
                         <button className="btn btn-light btn-lg m-2" onClick={ () => Cotizar()}>Cotizar</button>
                     </div>
                 </div>
             </div>
             <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} />
+            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="exampleModalLabel">Compras</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div class="alert alert-success" role="alert">
+                            Realice el pago de <b>${totalPrecio}</b> al siguiente número de cuenta 123456789098765, por un total de <b>{numArticulos}</b> artículos. Una vez que el proveedor confirme su pago se le enviara su producto. se le enviara un correo con todos los datos de sus productos y proveedores 
+                            </div>
+                            <div class="form-group">
+                                <label htmlFor="ubicacion">Ubicación:</label>
+                                <input name="Ubicación" value={valueUbi} onChange={(e) => onInputChange2(e)}  type="text" className="form-control" id="ubicacion"/>
+                            </div>
+                            <div class="form-group">
+                                <label htmlFor="codigo-postal">Código Postal:</label>
+                                <input name="CP" value={valueCP} onChange={(e) => onInputChange2(e)}  className="form-control"id="codigo-postal" type="number"/>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" onClick={() => Comprar()} className="btn btn-primary" data-bs-dismiss="modal">Comprar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
 
     )

@@ -8,6 +8,7 @@ const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
 export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, montoOferta, Stock, Estado, Estatus, nombre = "", Categoria, Oferta, saveOne, Fecha, empresa, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado, PDF }) => {
+    let O = Oferta == "0" ? false : true;
     const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN } = useForm({
         nombreIN: nombre,
         descripcionIN: descripcion,
@@ -22,7 +23,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
         TempodeEntregaIN: TempodeEntrega,
         TempoDdeEntregaAgotadoIN: TempoDdeEntregaAgotado
     })
-    const [check, setCheck] = useState(Oferta)
+    const [check, setCheck] = useState(O)
     const [file, setFile] = useState(null);
 
     const [notiCarrito, setNotiCarrito] = useState();
@@ -34,7 +35,54 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
     function cambios(e) {
         onInputChange(e)
     }
+    function message(mess) {
+        setNotiCarrito(`${mess}`);
+        setActiveNoti(true)
+        setTimeout(() => {
+            setActiveNoti(false)
+        }, 5000);
+    }
     function save(id) {
+        if(categoriaIN === ""){
+            message("Categoria");
+            return;
+        }
+        if (stokIN === 0 || stokIN === undefined) {
+            message("Stock")
+            return;
+        }
+        if (descripcionIN === "") {
+            message("descripcion")
+            return;
+        }
+        if (precioIN === undefined || precioIN === 0) {
+            message("Precio")
+            return;
+        }
+        if (nombreIN === "") {
+            message("Nombre")
+            return;
+        }
+        if (TempodeEntregaIN === "") {
+            message("TiempoEN")
+            return;
+        }
+        if(marcaIN === ""){
+            message("MarcaEN");
+            return;
+        }
+        if(CodigoProveedorIN === ""){
+            message("CodigoProveedor");
+            return;
+        }
+        if(PesoIN === ""){
+            message("PesoIN");
+            return;
+        }
+        if(TempoDdeEntregaAgotadoIN === ""){
+            message("TempoDdeEntregaAgotadoIN");
+            return;
+        }
         let pdf = document.getElementById(`file${id}`);
         let file = pdf.files[0];
         
@@ -166,13 +214,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                         </div>
 
                         <div className="form-floating col-sm ms-1 " >
-                            <select className="form-select" id={`categoriaIN${id}`} name="categoriaIN" value={categoriaIN} onChange={(e) => cambios(e)} aria-label="Floating label select example">
-                                <option value="Celulares">Celulares</option>
-                                <option value="Pantallas">Pantallas</option>
-                                <option value="Calzado">Calzado</option>
-                                <option value="Muebles">Muebles</option>
-                                <option value="Otros">Otros</option>
-                            </select>
+                            <input name={`categoriaIN`} id={`categoriaIN${id}`} value={categoriaIN} onChange={(e) => cambios(e)} type="text"  className="form-control " />
                             <label className='fw-bold'>Categoría del producto:</label>
                         </div>
                     </div>

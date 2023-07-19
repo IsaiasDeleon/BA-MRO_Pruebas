@@ -297,7 +297,7 @@ export const AppRoute = () => {
                 menu === 2
                 ? (
                     <>
-                        <Head2 numArticulos={numArticulos} numGustos={numGustos} elemntsGustos={elemntsGustos} DeleteItemGustos={DeleteItemGustos} setMenu={setMenu}  setClickProducto={setClickProducto}  />
+                        <Head2 numArticulos={numArticulos} numGustos={numGustos} elemntsGustos={elemntsGustos} DeleteItemGustos={DeleteItemGustos} setMenu={setMenu}  setClickProducto={setClickProducto} numNoti={numNoti} elemntsNoti={elemntsNoti} EliminarNotiFicacion={EliminarNotiFicacion} ComprarProductoNoti={ComprarProductoNoti}/>
                     </>
                 )
                 :(

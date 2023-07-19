@@ -1,5 +1,5 @@
 import 'animate.css';
-export const Noti = ({ notiCarrito, activeNoti }) => {
+export const Noti = ({ notiCarrito, activeNoti, ide="" }) => {
     let message = "";
     let color = "";
     // switch (notiCarrito){
@@ -151,6 +151,50 @@ export const Noti = ({ notiCarrito, activeNoti }) => {
     }else if(notiCarrito === "ContraRechazada"){
         message = "Contra oferta rechazada. se le notificara al proveedor";
         color="success";
+    }else if(notiCarrito === "Categoria"){
+        message = "El campo Categoria es un campo obligatorio";
+        color="warning";
+    }
+    else if(notiCarrito === "CategoriaAll"){
+        message = `El campo Categoria es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "StockAll"){
+        message = `El campo Stock es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "descripcionAll"){
+        message = `El campo descripción es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "PrecioAll"){
+        message = `El campo Precio es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+
+     else if(notiCarrito === "NombreAll"){
+        message = `El campo Nombre es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "TiempoENAll"){
+        message = `El campo Tiempo de entrega es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "MarcaENAll"){
+        message = `El campo Marca es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+     else if(notiCarrito === "CodigoProveedorAll"){
+        message = `El campo Código es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "PesoINAll"){
+        message = `El campo Peso es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }
+    else if(notiCarrito === "TempoDdeEntregaAgotado"){
+        message = `El campo Tiempo de entrega en caso de agotarse es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
     }
     
     

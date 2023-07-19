@@ -22,7 +22,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
         precioOfertaIN: 0,
         stokIN: 1,
         estadoIN: 1,
-        categoriaIN: "Otros",
+        categoriaIN: "",
         marcaIN: "",
         CodigoProveedorIN: "",
         PesoIN: "0 KG",
@@ -99,7 +99,10 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
             message("numParteIN");
             return;
         }
-
+        if(categoriaIN === ""){
+            message("Categoria");
+            return;
+        }
         let Images = document.getElementById(`Images`);
         let nombre = [];
         for (let i = 0; i < imagesArray.length; i++) {
@@ -408,13 +411,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                         </div>
                         
                         <div className="form-floating " style={{ "width": "100%" }}>
-                            <select className="form-select" id={`categoriaIN${id}`} name="categoriaIN" value={categoriaIN} onChange={(e) => cambios(e)} aria-label="Floating label select example">
-                                <option value="Celulares">Celulares</option>
-                                <option value="Pantallas">Pantallas</option>
-                                <option value="Calzado">Calzado</option>
-                                <option value="Muebles">Muebles</option>
-                                <option value="Otros">Otros</option>
-                            </select>
+                            <input name={`categoriaIN`} id={`categoriaIN${id}`} value={categoriaIN} onChange={(e) => cambios(e)} type="text"  className="form-control " />
                             <label className='fw-bold'>Categoría del producto:</label>
                         </div>
                        
