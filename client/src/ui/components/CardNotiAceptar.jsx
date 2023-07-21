@@ -1,5 +1,5 @@
 
-export const CardNoti = ({ id, img, descripcion, monto, EliminarNotiFicacion,empresa,ContraOferta, setClickProducto, montoOferta, Oferta, ComprarProductoNoti}) => {
+export const CardNotiAceptar = ({ id, img, descripcion, EliminarNotiFicacion,empresa,OfertaNoti, ComprarProductoNoti}) => {
     function EliminarNoti(id){
         EliminarNotiFicacion(id)
     }
@@ -21,18 +21,10 @@ export const CardNoti = ({ id, img, descripcion, monto, EliminarNotiFicacion,emp
                     <img src={`https://ba-mro.mx/Server/Images/${imagenes}`} alt="IMGCompra" className="GustosIMG" />
                 </div>
                 <div className=" ms-3" style={{ "width": "100%" }}>
-                    <p className="text-secondary OpcionesFont"  style={{ "whiteSpace": "normal","margin":"0px" }} >El proveedor: <b className="text-dark OpcionesFont">BA-MRO</b>, realizo una contra oferta del producto: <b className="text-dark OpcionesFont">{descripcion}</b> </p>
-                   
-                       
-                        <h6> Contra oferta: <b className="text-success">${ContraOferta}</b></h6>
-                            {/* {
-                                Oferta == 1 ? <h5> OFERTA: <b className="text-success">${montoOferta} </b></h5> : <></>
-                            } */}
-                      
+                    <p className="text-secondary OpcionesFont"  style={{ "whiteSpace": "normal","margin":"0px" }} >El proveedor: <b className="text-dark OpcionesFont">BA-MRO</b>, <b className="text-success">acepto</b> su oferta del producto: <b className="text-dark OpcionesFont">{descripcion}</b> </p>
+                        <h6> Precio: <b className="text-success">${OfertaNoti}</b></h6>
                         <button className="btn btn-dark ms-4" onClick={() => ComprarProductoN(id)}>Aceptar</button>  
                         <button className="btn btn-secondary ms-4" onClick={() => EliminarNoti(id)}>Rechazar</button>    
-                        {/* <i onClick={() => EliminarGusto(id)} className="bi bi-trash IconoBasura"></i> */}
-                    
                 </div>
             </div>
         </li>

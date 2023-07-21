@@ -7,9 +7,9 @@ import { Noti } from "./Notificaciones";
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
-export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, montoOferta, Stock, Estado, Estatus, nombre = "", Categoria, Oferta, saveOne, Fecha, empresa, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado, PDF }) => {
+export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, montoOferta, Stock, Estado, Estatus, nombre = "", Categoria, Oferta, saveOne, Fecha, empresa, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado, PDF, almacen, ubiAlma }) => {
     let O = Oferta == "0" ? false : true;
-    const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN } = useForm({
+    const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN,AlmacenIN,AlmaUbiIN } = useForm({
         nombreIN: nombre,
         descripcionIN: descripcion,
         precioIN: monto,
@@ -21,7 +21,9 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
         CodigoProveedorIN: CodigoProveedor,
         PesoIN: Peso,
         TempodeEntregaIN: TempodeEntrega,
-        TempoDdeEntregaAgotadoIN: TempoDdeEntregaAgotado
+        TempoDdeEntregaAgotadoIN: TempoDdeEntregaAgotado,
+        AlmacenIN:almacen,
+        AlmaUbiIN:ubiAlma
     })
     const [check, setCheck] = useState(O)
     const [file, setFile] = useState(null);
@@ -83,6 +85,14 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
             message("TempoDdeEntregaAgotadoIN");
             return;
         }
+        if(AlmacenIN === ""){
+            message("Almacen");
+            return;
+        }
+        if(AlmaUbiIN === ""){
+            message("AlmacenUbi");
+            return;
+        }
         let pdf = document.getElementById(`file${id}`);
         let file = pdf.files[0];
         
@@ -93,13 +103,13 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
             formData = new FormData();
             formData.set('file', file);
         }
-
+        console.log(check)
         saveOne(formData, {
             Categoria: categoriaIN,
             Estado: estadoIN,
             Estatus: "1",
             Fecha,
-            Oferta: check,
+            Oferta: check == false?0:1,
             Stock: stokIN,
             descripcion: descripcionIN,
             empresa,
@@ -114,7 +124,9 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
             peso: PesoIN,
             TiempoEn: TempodeEntregaIN,
             TiempoEnAg: TempoDdeEntregaAgotadoIN,
-            PDF
+            PDF,
+            almacen:AlmacenIN,
+            almacenUbi:AlmaUbiIN
         }
         )
 
@@ -184,6 +196,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
         <> 
             <div className="d-flex align-items-center DiseñoMisProductos " >
             <div style={{"maxWidth":"20%", "width":"30%"}}>
+                    <h3> #{id} </h3>
                     <div class="input-div2" onDrop={(e) => inputDivChange(e,id)} >
                         <p>Arrastra y suelta tus fotos aquí o <button style={{ "padding": "5px", "background": "#000", "color": "#fff", "borderRadius": "5px" }}>selecciona el archivo</button></p>
                         <input onChange={() => inputChange(id)} id={`Images${id}`} type="file" class="file Images" multiple="multiple" accept="image/jpeg, image/png, image/jpg" />
@@ -194,6 +207,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                     imagenes?.map((image, index) => (
                         image != "" ?(
                             <div style={{"width":"47%","display":"inline-block","border":"2px dashed #D7DBDD","margin":"3px"}} className="image" key={index}>
+                               
                             <img src={`https://ba-mro.mx/Server/Images/${image}`} alt="IMGCompra"  className="ImgMisProductos" />
                             <i style={{"float":"right","margin":"0"}} onClick={(e) => deleteImage(e, image, id)} className="bi bi-trash-fill h4"></i>
                         </div>
@@ -210,12 +224,12 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                     <div className="d-flex">
                         <div className="form-floating col-sm ">
                             <input id={`nombreIN${id}`} name={`nombreIN`} value={nombreIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Nombre del producto:</label>
+                            <label className='fw-bold'>Nombre del producto:<code>*</code></label>
                         </div>
 
                         <div className="form-floating col-sm ms-1 " >
                             <input name={`categoriaIN`} id={`categoriaIN${id}`} value={categoriaIN} onChange={(e) => cambios(e)} type="text"  className="form-control " />
-                            <label className='fw-bold'>Categoría del producto:</label>
+                            <label className='fw-bold'>Categoría del producto:<code>*</code></label>
                         </div>
                     </div>
 
@@ -226,7 +240,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                                 <option value="1">Nuevo</option>
                                 <option value="2">Usado</option>
                             </select>
-                            <label className='fw-bold'>Estado del producto:</label>
+                            <label className='fw-bold'>Estado del producto:<code>*</code></label>
                         </div>
 
                         <div>
@@ -246,7 +260,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                         <div className="form-floating " style={{ "width": "100%" }}>
                             <textarea style={{ "width": "100%", "height": "auto" }} name={`descripcionIN`} id={`descripcionIN${id}`} value={descripcionIN} onChange={(e) => cambios(e)} type="text" className="form-control">
                             </textarea>
-                            <label className='fw-bold'>Descripción:</label>
+                            <label className='fw-bold'>Descripción:<code>*</code></label>
                         </div>
                     </div>
 
@@ -254,7 +268,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                         <div className="d-flex">
                             <div className="form-floating col-sm" style={{ "marginRight": "5px" }}>
                                 <input name={`precioIN`} id={`precioIN${id}`} value={precioIN} onChange={(e) => cambios(e)} type="Number" min={1} className="form-control " />
-                                <label className='fw-bold'>Precio:</label>
+                                <label className='fw-bold'>Precio:<code>*</code></label>
                             </div>
                             <div className="form-floating col-sm" style={{ "marginLeft": "5px" }}>
                                 <input name={`precioOfertaIN`} id={`precioOfertaIN${id}`} value={precioOfertaIN} onChange={(e) => cambios(e)} type="Number" min={1} className="form-control " />
@@ -275,35 +289,45 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                     <div className="d-flex"  style={{ "marginRight":"5px" }}>
                         <div className="form-floating margin-Inputs col-8" style={{ "marginLeft":"0" }}>
                             <input id={`marcaIN${id}`} name={`marcaIN`} value={marcaIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Marca/Fabricante:</label>
+                            <label className='fw-bold'>Marca/Fabricante:<code>*</code></label>
                         </div>
                         <div className="form-floating margin-Inputs col-4" >
                             <input id={`CodigoProveedorIN${id}`} name={`CodigoProveedorIN`} value={CodigoProveedorIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Código del proveedor (SKU/ID):</label>
+                            <label className='fw-bold'>Código del proveedor (SKU/ID):<code>*</code></label>
                         </div>
                     </div>
                     
                     <div className="d-flex">
                         <div className="form-floating margin-Inputs col-sm" style={{ "width": "100%" }}>
                             <input id={`PesoIN${id}`} name={`PesoIN`} value={PesoIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Peso:</label>
+                            <label className='fw-bold'>Peso:<code>*</code></label>
                         </div>
                         <div className="form-floating margin-Inputs col-sm" style={{ "width": "100%" }}>
                             <input id={`TempodeEntregaIN${id}`} name={`TempodeEntregaIN`} value={TempodeEntregaIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Tiempo de entrega:</label>
+                            <label className='fw-bold'>Tiempo de entrega:<code>*</code></label>
                         </div>
                         <div className="form-floating margin-Inputs col-sm" style={{ "width": "100%" }}>
                             <input id={`TempoDdeEntregaAgotadoIN${id}`} name={`TempoDdeEntregaAgotadoIN`} value={TempoDdeEntregaAgotadoIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Tiempo de entrega en caso de agotarse:</label>
+                            <label className='fw-bold'>Tiempo de entrega en caso de agotarse:<code>*</code></label>
                         </div>
                     </div>
-                
+                    <div  style={{"display":"grid","gridTemplateColumns":"50% 50%"}}>
+                        <div className="form-floating " style={{ "marginRight": "10px" }}>
+                            <input id={`AlmacenIN${id}`} name={`AlmacenIN`} value={AlmacenIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
+                            <label className='fw-bold'>Almacen:<code>*</code></label>
+                        </div>
+
+                        <div className="form-floating " style={{ "marginLeft": "10px" }}>
+                            <input id={`AlmaUbiIN${id}`} name={`AlmaUbiIN`} value={AlmaUbiIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
+                            <label className='fw-bold'>Ubicación almacen:<code>*</code></label>
+                        </div>
+                    </div>
                 </div>
                 <div className="m-2" style={{ "width": "100%" }}>
                     <div className="stockDIV">
                         <div className="form-floating " style={{ "width": "100%" }}>
                             <input name={`stokIN`} value={stokIN} id={`stokIN${id}`} onChange={(e) => cambios(e)} type="Number" min={1} className="form-control" />
-                            <label className='fw-bold'>Stock:</label>
+                            <label className='fw-bold'>Stock:<code>*</code></label>
                         </div>
 
                         <div></div>

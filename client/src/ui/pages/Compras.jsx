@@ -6,9 +6,15 @@ export const ComprasProduct = ({ setMenu }) => {
   const [activeNoti, setActiveNoti] = useState();
   const [ubica, setUbica] = useState("");
   const [CP, setCP] = useState("");
-  function Comprar(ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo, imagenes, ubica, CP) {
+  function Comprar(ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo, imagenes, ubica, CP, Oferta, Tipo) {
     if(ubica !== "" && CP !== ""){
-      window.open(`https://ba-mro.mx/Server/CorreoCompra.php?CO=${ContraOferta}&MARCA=${Marca}&TempodeEntrega=${TempodeEntrega}&descripcion=${descripcion}&empresa=${empresa}&nombre=${nombre}&numParte=${numParte}&Uname=${Uname}&Correo=${Correo}&imagenes=${imagenes}&ubica=${ubica}&CP=${CP}`, '_blank');
+      let pre = 0;
+      if(Tipo === "ContraOferta"){
+        pre = ContraOferta;
+      }else{
+        pre = Oferta;
+      }
+      window.open(`https://ba-mro.mx/Server/CorreoCompra.php?CO=${pre}&MARCA=${Marca}&TempodeEntrega=${TempodeEntrega}&descripcion=${descripcion}&empresa=${empresa}&nombre=${nombre}&numParte=${numParte}&Uname=${Uname}&Correo=${Correo}&imagenes=${imagenes}&ubica=${ubica}&CP=${CP}`, '_blank');
       setNotiCarrito("CorreoEnviado2")
       setActiveNoti(true)
       setTimeout(() => {
@@ -34,7 +40,7 @@ export const ComprasProduct = ({ setMenu }) => {
     setMenu(2);
   }, []);
   const location = useLocation();
-  const { ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo, img } = location.state;
+  const { ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo, img, Oferta, Tipo } = location.state;
   let name = "";
   let email = "";
   let tel = "";
@@ -47,12 +53,12 @@ export const ComprasProduct = ({ setMenu }) => {
       imagenes = images?.[0]
   }
   if(empresa === "Badger"){
-    name = "Badger automation";
+    name = "BA-MRO";
     email = "contact@badgerautomation.com"
     tel = "686 582 7223"
     ubi = "Calzada Robleo Industrial 460, Col. Huertas del Colorado, Mexicali, BC 21384, MX"
   }else{
-    name = "APLINTEC";
+    name = "BA-MRO";
     email = "contact@badgerautomation.com"
     tel = "686 582 7223"
     ubi = "Calzada Robleo Industrial 460, Col. Huertas del Colorado, Mexicali, BC 21384, MX"
@@ -113,7 +119,7 @@ export const ComprasProduct = ({ setMenu }) => {
                 onChange={(e) => onInputChange2(e)}
               />
             </div>
-            <button onClick={ () => {Comprar(ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo,imagenes,ubica, CP)}} id="confirmar-btn" className="btn btn-dark">
+            <button onClick={ () => {Comprar(ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo,imagenes,ubica, CP,Oferta, Tipo )}} id="confirmar-btn" className="btn btn-dark">
               Confirmar compra
             </button>
           </div>
@@ -133,7 +139,7 @@ export const ComprasProduct = ({ setMenu }) => {
             <strong>Número de parte del producto:</strong> {numParte}
           </p>
           <p className="pCompras">
-            <strong>Precio:</strong> ${ContraOferta}
+            <strong>Precio:</strong> ${Tipo === "ContraOferta" ? ContraOferta : Oferta}
           </p>
           <p className="pCompras">
             <strong>Tiempo de entrega:</strong> {TempodeEntrega}

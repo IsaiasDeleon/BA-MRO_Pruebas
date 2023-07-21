@@ -15,7 +15,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
     let estrellas = 5;
     const { user } = useContext(AuthContext);
     let idU = user?.id;
-    const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN, identificadorAIN, numParteIN } = useForm({
+    const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN, identificadorAIN, numParteIN,AlmacenIN, AlmaUbiIN } = useForm({
         nombreIN: "",
         descripcionIN: "",
         precioIN: 0,
@@ -29,7 +29,9 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
         TempodeEntregaIN: "1",
         TempoDdeEntregaAgotadoIN: "1",
         identificadorAIN:"",
-        numParteIN:""
+        numParteIN:"",
+        AlmacenIN:"", 
+        AlmaUbiIN:""
     })
     const [check, setCheck] = useState(false)
     const [file, setFile] = useState(null);
@@ -103,6 +105,14 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
             message("Categoria");
             return;
         }
+        if(AlmacenIN === ""){
+            message("Almacen");
+            return;
+        }
+        if(AlmaUbiIN === ""){
+            message("AlmacenUbi");
+            return;
+        }
         let Images = document.getElementById(`Images`);
         let nombre = [];
         for (let i = 0; i < imagesArray.length; i++) {
@@ -151,7 +161,9 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                                 TiempoEnAg: TempoDdeEntregaAgotadoIN,
                                 PDF: response2.data,
                                 identificadorA:identificadorAIN,
-                                numParte:numParteIN
+                                numParte:numParteIN,
+                                almacen:AlmacenIN,
+                                almacenUbi:AlmaUbiIN
                             }
                           
                             HTTP.post("/InsertarProducto", AllData).then((response3) => {
@@ -188,7 +200,9 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                                 TiempoEnAg: TempoDdeEntregaAgotadoIN,
                                 PDF: "N/A",
                                 identificadorA:identificadorAIN,
-                                numParte:numParteIN
+                                numParte:numParteIN,
+                                almacen:AlmacenIN,
+                                almacenUbi:AlmaUbiIN
                             }
                             HTTP.post("/InsertarProducto", AllData).then((response3) => {
                                 if (response3.data === "Insertado") {
@@ -290,6 +304,8 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                 let D12 = sheet[`L${InicioCelda}`]?.v
                 let D13 = sheet[`M${InicioCelda}`]?.v
                 let D14 = sheet[`N${InicioCelda}`]?.v
+                let D15 = sheet[`O${InicioCelda}`]?.v
+                let D16 = sheet[`P${InicioCelda}`]?.v
                 if(D1 === undefined){
                     alert(`La celda A${InicioCelda} se encuentra vacia favor de verificar su información`)
                     return;
@@ -343,8 +359,16 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                     alert(`La celda N${InicioCelda} se encuentra vacia favor de verificar su información`)
                     return;
                 }
+                if(D15 === undefined){
+                    alert(`La celda O${InicioCelda} se encuentra vacia favor de verificar su información`)
+                    return;
+                }
+                if(D16 === undefined){
+                    alert(`La celda P${InicioCelda} se encuentra vacia favor de verificar su información`)
+                    return;
+                }
                
-                let datos={D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,D13,D14,idU};
+                let datos={D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,D13,D14,D15,D16,idU};
                 console.log(datos)
                 dataExcel.push(datos);
                 InicioCelda= InicioCelda+1;
@@ -365,7 +389,12 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
 
     return (
         <>
-            <div className="d-flex divNewProducto DiseñoMisProductos " >
+            <div style={{"width":"100%","padding":"4px","marginBottom":"2px", "marginTop":"65px"}} className="alert alert-primary text-center " role="alert">
+                <h5 className="text-center">Los campos con el simbolo (<code>*</code>) se consideran obligatorios</h5>
+            </div>
+            <div className="d-flex divNewProducto  " >
+                
+
                 <div className="imagenesNewProduct">
                     <div class="input-div" onDrop={(e) => inputDivChange(e)} >
                         <p>Arrastra y suelta tus fotos aquí o <button style={{ "padding": "5px", "background": "#000", "color": "#fff", "borderRadius": "5px" }}>selecciona el archivo</button></p>
@@ -407,12 +436,12 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                     <div className="m-2 newProducto-PrimerosInput">
                         <div className="form-floating " style={{ "width": "100%" }}>
                             <input id={`nombreIN${id}`} name={`nombreIN`} value={nombreIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Nombre del producto:</label>
+                            <label className='fw-bold'>Nombre del producto:<code>*</code></label>
                         </div>
                         
                         <div className="form-floating " style={{ "width": "100%" }}>
                             <input name={`categoriaIN`} id={`categoriaIN${id}`} value={categoriaIN} onChange={(e) => cambios(e)} type="text"  className="form-control " />
-                            <label className='fw-bold'>Categoría del producto:</label>
+                            <label className='fw-bold'>Categoría del producto:<code>*</code></label>
                         </div>
                        
                         <div className="form-floating ">
@@ -420,7 +449,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                                 <option value="1">Nuevo</option>
                                 <option value="2">Usado</option>
                             </select>
-                            <label className='fw-bold'>Estado del producto:</label>
+                            <label className='fw-bold'>Estado del producto:<code>*</code></label>
                         </div>
 
                     </div>
@@ -430,7 +459,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                             <div className="form-floating " style={{ "width": "100%" }}>
                                 <textarea style={{ "width": "100%" }} name={`descripcionIN`} id={`descripcionIN${id}`} value={descripcionIN} onChange={(e) => cambios(e)} type="text" className="form-control">
                                 </textarea>
-                                <label className='fw-bold'>Descripción:</label>
+                                <label className='fw-bold'>Descripción:<code>*</code></label>
                             </div>
                         </div>
 
@@ -439,7 +468,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                         <div className="d-flex">
                             <div className="form-floating col-sm" style={{ "marginRight": "10px" }}>
                                 <input name={`precioIN`} id={`precioIN${id}`} value={precioIN} onChange={(e) => cambios(e)} type="Number" min={1} className="form-control " />
-                                <label className='fw-bold'>Precio:</label>
+                                <label className='fw-bold'>Precio:<code>*</code></label>
                             </div>
                             {
                                 check && (
@@ -455,11 +484,11 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                         <div className="d-flex">
                             <div className="form-floating col-sm " style={{ "marginLeft": "10px", "marginRight": "10px" }}>
                                 <input id={`marcaIN${id}`} name={`marcaIN`} value={marcaIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                                <label className='fw-bold'>Marca/Fabricante:</label>
+                                <label className='fw-bold'>Marca/Fabricante:<code>*</code></label>
                             </div>
                             <div className="form-floating col-sm" style={{ "marginLeft": "10px" }}>
                                 <input id={`CodigoProveedorIN${id}`} name={`CodigoProveedorIN`} value={CodigoProveedorIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                                <label className='fw-bold'>Código del proveedor (SKU/ID):</label>
+                                <label className='fw-bold'>Código del proveedor (SKU/ID):<code>*</code></label>
                             </div>
                         </div>
                     </div>
@@ -467,35 +496,46 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
 
                         <div className="form-floating " style={{ "marginRight": "10px" }}>
                             <input id={`identificadorAIN${id}`} name={`identificadorAIN`} value={identificadorAIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Identificador almacen:</label>
+                            <label className='fw-bold'>Identificador almacen:<code>*</code></label>
                         </div>
 
 
                         <div className="form-floating " style={{ "marginLeft": "10px", "marginRight": "10px" }}>
                             <input name={`numParteIN`} value={numParteIN} id={`numParteIN${id}`} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Número de parte:</label>
+                            <label className='fw-bold'>Número de parte:<code>*</code></label>
                         </div>
 
                         <div className="form-floating "  style={{ "marginLeft": "10px", "marginRight": "10px" }}>
                             <input id={`PesoIN${id}`} name={`PesoIN`} value={PesoIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Peso:</label>
+                            <label className='fw-bold'>Peso:<code>*</code></label>
                         </div>
 
 
                         <div className="form-floating " style={{ "marginLeft": "10px" }}>
                             <input name={`stokIN`} value={stokIN} id={`stokIN${id}`} onChange={(e) => cambios(e)} type="Number" min={1} className="form-control" />
-                            <label className='fw-bold'>Stock:</label>
+                            <label className='fw-bold'>Stock:<code>*</code></label>
                         </div>
                         </div>
                     <div className="m-2" style={{"display":"grid","gridTemplateColumns":"50% 50%"}}>
                         <div className="form-floating " style={{ "marginRight": "10px" }}>
                             <input id={`TempodeEntregaIN${id}`} name={`TempodeEntregaIN`} value={TempodeEntregaIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Tiempo de entrega:</label>
+                            <label className='fw-bold'>Tiempo de entrega:<code>*</code></label>
                         </div>
 
                         <div className="form-floating " style={{ "marginLeft": "10px" }}>
                             <input id={`TempoDdeEntregaAgotadoIN${id}`} name={`TempoDdeEntregaAgotadoIN`} value={TempoDdeEntregaAgotadoIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
-                            <label className='fw-bold'>Tiempo de entrega en caso de agotarse:</label>
+                            <label className='fw-bold'>Tiempo de entrega en caso de agotarse:<code>*</code></label>
+                        </div>
+                    </div>
+                    <div className="m-2" style={{"display":"grid","gridTemplateColumns":"50% 50%"}}>
+                        <div className="form-floating " style={{ "marginRight": "10px" }}>
+                            <input id={`AlmacenIN${id}`} name={`AlmacenIN`} value={AlmacenIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
+                            <label className='fw-bold'>Almacen:<code>*</code></label>
+                        </div>
+
+                        <div className="form-floating " style={{ "marginLeft": "10px" }}>
+                            <input id={`AlmaUbiIN${id}`} name={`AlmaUbiIN`} value={AlmaUbiIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
+                            <label className='fw-bold'>Ubicación almacen:<code>*</code></label>
                         </div>
                     </div>
                     <div className="m-2" style={{ "width": "100%" }}>

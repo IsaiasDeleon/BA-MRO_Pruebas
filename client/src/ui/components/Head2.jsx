@@ -4,6 +4,7 @@ import { AuthContext } from "../../auth/AuthContext"
 import { types } from "../../types/types";
 import { CardGustos } from "./CardGustos";
 import { CardNoti } from "./CarNoti"
+import { CardNotiAceptar } from "./CardNotiAceptar";
 export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGustos, setMenu, setClickProducto, elemntsNoti,EliminarNotiFicacion,ComprarProductoNoti,numNoti }) => {
     const { LogOut, user } = useContext(AuthContext); 
     const navigate = useNavigate(); 
@@ -76,9 +77,13 @@ export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGusto
                                     <div className="text-center Notificaciones"><p style={{ "marginTop": "-3px", "color": "#fff" }} > {numNoti} </p>
                                     </div>
                                     <ul style={{"maxHeight":"375px", "overflowY":"auto" }} className="dropdown-menu ulcarrito" aria-labelledby="dropdownMenuButton1">
-                                       {
+                                    {
                                         elemntsNoti?.map((data) => (
-                                            <CardNoti key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            data.TipoNoti === "ContraOferta"?
+                                        (<CardNoti key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />):
+                                        (<CardNotiAceptar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />)
+                                            
+                                            
                                         ))
                                        }
                                      

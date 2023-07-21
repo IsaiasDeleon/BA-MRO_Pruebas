@@ -195,6 +195,18 @@ export const Noti = ({ notiCarrito, activeNoti, ide="" }) => {
     else if(notiCarrito === "TempoDdeEntregaAgotado"){
         message = `El campo Tiempo de entrega en caso de agotarse es un campo obligatorio, en el articulo ${ide}`;
         color="warning";
+    }else if(notiCarrito === "AlmacenAll"){
+        message = `El campo Almacen es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }else if(notiCarrito === "AlmacenUbiAll"){
+        message= `El campo Ubicación almacen es un campo obligatorio, en el articulo ${ide}`;
+        color="warning";
+    }else if(notiCarrito === "Almacen"){
+        message = "El campo Almacen es un campo obligatorio";
+        color="warning";
+    }else if(notiCarrito === "AlmacenUbi"){
+        message= "El campo Ubicación almacen es un campo obligatorio";
+        color="warning";
     }
     
     
