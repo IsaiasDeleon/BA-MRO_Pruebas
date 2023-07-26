@@ -199,12 +199,17 @@ export const AppRoute = () => {
             function ComprarProductoNoti(id){
                 if( idU !== undefined){
                     HTTP.post("/ComprarPoductoNoti",{"idU":idU, "id":id}).then((response) => {
-                        console.log(response?.data?.[0]?.ContraOferta)
+                       
                         
                         setMenu(2);
+                        const dataToPass = {
+                            idU: idU,
+                            id: id,
+                            ...response.data?.[0] // Incluimos los datos de response.data si es necesario
+                          };
                         navigate('/Compras', {
                             replace: true,
-                            state: response.data?.[0]
+                            state: dataToPass
                         })
                     })
                 }

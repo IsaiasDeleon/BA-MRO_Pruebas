@@ -64,13 +64,13 @@ export const Login = ({setMenu}) => {
        }
         // Define la contraseña sin encriptar
         const password = pass;
-
-        // Aplica el hash SHA-256 a la contraseña
-        const hashedPassword = CryptoJS.SHA256(password).toString();
-       HTTP.post("/Login",{"user":correo,"pass":hashedPassword}).then((response) => {
-        if(response.data[0]){
+       
+        
+       HTTP.post("/Login",{"user":correo,"pass":password}).then((response) => {
+        console.log(response)
+        if(response.data){
             const lastPath = localStorage.getItem('lastPath') || '/';
-            let data = response.data[0];
+            let data = response.data;
             Log(data.Nombre, data.id, data.img, data.tipoUser,0);
             navigate(lastPath,{
                 replace:true
@@ -113,13 +113,8 @@ export const Login = ({setMenu}) => {
             }, 5000);
             return;
        }
-       // Define la contraseña sin encriptar
-        const password = pass;
 
-        // Aplica el hash SHA-256 a la contraseña
-        const hashedPassword = CryptoJS.SHA256(password).toString();
-
-       HTTP.post("/Registrar",{"nombre":nombre,"correo":correo,"pass":hashedPassword}).then((response) => {
+       HTTP.post("/Registrar",{"nombre":nombre,"correo":correo,"pass":pass}).then((response) => {
             console.log(response.data)
             setNotiCarrito(response.data);
             setActiveNoti(true)

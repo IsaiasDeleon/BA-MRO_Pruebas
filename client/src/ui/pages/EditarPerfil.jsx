@@ -1,17 +1,26 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState,useRef  } from 'react';
 import axios from 'axios';
 
 import { useForm } from "../../hooks/useForm"
 import { Noti } from '../components/Notificaciones';
 import { AuthContext } from '../../auth/AuthContext';
 const URLServer = "http://192.168.100.18:3020/"
-
+const HTTP = axios.create({
+    baseURL: "https://ba-mro.mx/Server/Data.php"
+})
+// Importa la biblioteca de crypto-js para el hash SHA-256
+const CryptoJS = require("crypto-js");
 export const EditarPerfil = ({ numArticulos, setMenu }) => {
 
     const { user } = useContext(AuthContext);
     let idU = user?.id;
-    let imgU = user?.img;
-
+    let img = user?.img;
+    if(user?.google == 1){
+        img = user?.img;
+    }else{
+        img = (img) ? `https://ba-mro.mx/Server/ImagesUser/${img}` : `https://ba-mro.mx/Server/Images/Ge.jpg`;
+    }
+    const fileInputRef = useRef();
     const [valuesEstado, setValueEstado] = useState([]);
     const [valueMunicipio, setValueMunicipio] = useState([]);
     const [nameEstado, setNameEstado] = useState("");
@@ -28,6 +37,8 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     const [pass, setPass] = useState("");
     const [direccion, setDireccion] = useState("");
     const [CP, setCP] = useState("");
+    const [Correo, setCorreo] = useState("");
+    const [Google, setGoogle] = useState(0);
     const [pais, setPais] = useState("");
     const [estado, setEstado] = useState(1);
     const [municipio, setMunicipio] = useState(1);
@@ -66,23 +77,26 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     }
 
     useEffect(() => {
+      
         if( idU !== undefined){
             const getD = async () => {
-                let respuesta = await axios.post(URLServer + "getDatosGenerales", { "IdUsuario": idU }).then((response) => {
-                    console.log(response)
+              
+                let respuesta = await  HTTP.post("/getDatosGenerales",{"IdUsuario": idU}).then((response) => {
                     return response?.data[0]
                 })
+               
                 if(respuesta !== undefined){
                     setNombre(respuesta.Nombre);
                     setTelefono(respuesta.telefono);
+                    
                     setPass(respuesta.Password);
                     setDireccion(respuesta.Direccion);
                     setCP(respuesta.CP);
+                    setCorreo(respuesta.Correo)
+                    setGoogle(respuesta.google)
                     setPais("Mexico");
                     setEstado(1);
-                    console.log(respuesta.estado)
                     if(respuesta.estado !== null){
-                        console.log("Entro")
                         setEstado(respuesta.estado);
                     }
                     setMunicipio(1)
@@ -101,7 +115,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
             getEstados()
             getMunicipios()
             getD()
-            getCompras()
+            //getCompras()
         }
         setMenu(2)
     }, [])
@@ -111,25 +125,25 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     })
     //Obtenemos los estados 
     function getEstados() {
-        axios.get(URLServer + "getEstado").then((response) => {
+        HTTP.post("/getEstado",{"N":"2"}).then((response) => {
             setValueEstado(response.data);
         })
     }
     //Obtenemos el nombre del estado seleccionado
     function getNameEstado() {
-        axios.post(URLServer + "getNameEstado", { "idEstado": estado }).then((response) => {
+        HTTP.post("/getNameEstado",{"idEstado": estado}).then((response) => {
             setNameEstado(response.data[0].estado)
         })
     }
     //Obtenemos todos los municipios del estado seleccionado
     function getMunicipios() {
-        axios.post(URLServer + "getMunicipio", { "Estado": estado }).then((response) => {
+        HTTP.post("/getMunicipio",{ "Estado": estado }).then((response) => {
             setValueMunicipio(response.data)
         })
     }
     //Obtenemos el nombre del municipio seleccionado
     function getNameMunicipio() {
-        axios.post(URLServer + "getNameMunicipio", { "idMunicipio": municipio }).then((response) => {
+        HTTP.post("/getNameMunicipio",{"idMunicipio": municipio}).then((response) => {
             setNameMunicipio(response.data[0].municipio);
         })
     }
@@ -140,7 +154,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                 let latitude = position.coords.latitude;
                 let longitude = position.coords.longitude;
                 if (latitude && longitude) {
-                    axios.post(URLServer + "saveUbicacion", { "latitude": latitude, "longitude": longitude }).then((response) => {
+                    HTTP.post("/saveUbicacion",{"idU":idU, "latitude": latitude, "longitude": longitude }).then((response) => {
                         if (response.data == "Guardada") {
                             setNotiCarrito(response.data);
                             setActiveNoti(true)
@@ -158,9 +172,11 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                     setActiveNoti(false)
                 }, 7000);
             }, {
-            enableHighAccuracy: true
-            , timeout: 5000
-        }
+                maximumAge: 0, // No utilizar caché
+                timeout: 5000,
+                enableHighAccuracy: true
+           
+            }
         );
     }
     function Mapa() {
@@ -185,11 +201,40 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     useEffect(() => {
         getNameMunicipio();
     }, [municipio]);
-
+    function message(mess) {
+        setNotiCarrito(`${mess}`);
+        setActiveNoti(true)
+        setTimeout(() => {
+            setActiveNoti(false)
+        }, 5000);
+    }
     //Guardar los detalles del usuario
     function SaveDetailsUser(){
+        if(Nombre === ""){
+            message("NombrePerfil")
+            return;
+        }
+        if(Telefono === ""){
+            message("TelefonoPerfil")
+            return;
+        }
+        if(pass === ""){
+            message("passPerfil")
+            return;
+        }
+     
+        if(direccion === ""){
+            message("direccionPerfil")
+            return;
+        }
+        if(CP === ""){
+            message("CPPerfil")
+            return;
+        }
+        
         if(idU !== undefined){
-            axios.post(URLServer + "SaveDetailsUser", {"idU":idU,"Nombre":Nombre,"Telefono":Telefono,"Password":pass,"Direccion":direccion,"CP":CP,"Estado":estado,"Municipio":municipio }).then((response) => {
+            
+            HTTP.post("/SaveDetailsUser",{"idU":idU,"Nombre":Nombre,"Telefono":Telefono,"Password":pass,"Direccion":direccion,"CP":CP,"Estado":estado,"Municipio":municipio }).then((response) => {
                 if(response.data == "Actualizado"){
                     setNotiCarrito(response.data);
                     setActiveNoti(true)
@@ -197,25 +242,91 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                         setActiveNoti(false)
                     }, 4000);
                 }
-                console.log(response)
+               
                })
         }
        
     }
-
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById("passwordField");
+        const toggleButton = document.getElementById("toggleButton");
+        
+        if (passwordField.type === "password") {
+          // Si el campo es de tipo "password", cambiarlo a "text" para mostrar la contraseña
+          passwordField.type = "text";
+          toggleButton.innerText = "Ocultar contraseña";
+        } else {
+          // Si el campo es de tipo "text", cambiarlo a "password" para ocultar la contraseña
+          passwordField.type = "password";
+          toggleButton.innerText = "Mostrar contraseña";
+        }
+      }
+      console.log(Google)
+      function inputChange(){
+        let Images = document.getElementById(`Images`);
+        const files = Images?.files;
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            let formData;
+            if (file === undefined) {
+                formData = 0;
+            } else {
+                formData = new FormData();
+                formData.set('file', file);
+            }
+            if (formData !== 0) {
+                HTTP.post("/ImagesUser",formData).then((response) => {
+                    HTTP.post("/UpdateImagesUser",{"NameImg":response.data,"idU":idU}).then((response) => {
+                        setNotiCarrito(response.data);
+                        setActiveNoti(true)
+                        setTimeout(() => {
+                            setActiveNoti(false)
+                        }, 5000);
+                    })
+                })
+            }
+        }
+    }
+    const openFileInput = () => {
+        fileInputRef.current.click();
+    };
+    function inputDivChange(e) {
+        const files = e.dataTransfer.files
+        for (let i = 0; i < files.length; i++) {
+            let file = files[i];
+            let formData;
+            if (file === undefined) {
+                formData = 0;
+            } else {
+                formData = new FormData();
+                formData.set('file', file);
+            }
+            if (formData !== 0) {
+                HTTP.post("/ImagesUser",formData).then((response) => {
+                    HTTP.post("/UpdateImagesUser",{"NameImg":response.data,"idU":idU}).then((response) => {
+                        setNotiCarrito(response.data);
+                        setActiveNoti(true)
+                        setTimeout(() => {
+                            setActiveNoti(false)
+                        }, 5000);
+                    })
+                })
+            }
+        }
+    }
     return (
         <>
             <div className="cardPerfil contenedorPerfil" >
                 <div className="PrimeraSeccion text-center heightMin"  >
                     <div style={{"height":"100%","overflowX": "auto" }}>
                         <div className="marginPerfil">
-                            <img src={`./assets/${imgU}.jpg`} style={{ "borderRadius": "20px" }} alt="IMGUsuario" className="ImgCard" />
+                            <img src={img} style={{ "borderRadius": "20px" }} alt="IMGUsuario" className="ImgCard" />
                             <h4 className="NombrePerfil">{Nombre}</h4>
                             <hr style={{ "width": "95%", "margin": "0", "marginLeft": "2.5%" }} />
                             <div className="text-start marginPerfil">
                                 <h5 className="text-left tituloPerfil">Datos generales</h5>
                                 <h6 className="text-secondary datosPerfil">Correo:</h6>
-                                <h6 className='datosPerfil'>isaiasdeleonsalazar@gmail.com</h6>
+                                <h6 className='datosPerfil'>{Correo}</h6>
                                 <h6 className="text-secondary datosPerfil">Telefono:</h6>
                                 <h6 className='datosPerfil'>{Telefono}</h6>
                             </div>
@@ -233,7 +344,15 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                                 <h6 className="text-secondary datosPerfil">CP:</h6>
                                 <h6 className='datosPerfil' >{CP}</h6>
                                 <div className='text-end' style={{"width":"100%"}}>
-                                    <button  className="btn btn-dark mb-2" onClick={Mapa}>Ver MAPA</button>
+                                    {
+                                        latitude === null ? (
+                                            <>
+                                            </>
+                                        ):(
+                                            <button  className="btn btn-dark mb-2" onClick={Mapa}>Ver MAPA</button>
+                                        )
+                                    }
+                                    
                                 </div>
                             </div>
 
@@ -247,14 +366,18 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                         <h4 className='NombrePerfil'>Editar datos</h4>
                         <div className="text-start">
                             <h6 className='tituloPerfil'>Actualizar foto:</h6>
-                            <div className="text-center " style={{ "width": "100%", "border": "2px dashed #D7DBDD", "height": "110px" }}>
-                                <h5 className='tituloPerfil'>Arrastra y suelta la imagen</h5>
-                                <span className='tituloPerfil' style={{ "margin": "0" }}>O</span>
-                                <form method="POST" id="fileimgOPM">
-                                    <label htmlFor="fileimgOPM2" className="btn btn-secondary">Selecciona la imagen</label>
-                                    <input id="fileimgOPM2" type="file" name="fileimgOPM2" className="file_multi_video" hidden />
-                                </form>
-                            </div>
+                             {/* ... Otras partes del código ... */}
+                                <div style={{ "width": "100%", "border": "2px dashed #D7DBDD", "height": "110px", "textAlign": "center" }}onDrop={(e) => inputDivChange(e)}>
+                                    {/* Etiqueta label sin atributo htmlFor */}
+                                    <label>
+                                        Arrastra y suelta tus fotos aquí o
+                                        {/* Botón para activar el input de archivo */}
+                                        <button onClick={openFileInput} style={{ "padding": "5px", "background": "#000", "color": "#fff", "borderRadius": "5px" }}>selecciona el archivo</button>
+                                    </label>
+                                    {/* El input de archivo está oculto pero se activa cuando se hace clic en el botón */}
+                                    <input ref={fileInputRef} onChange={inputChange} id="Images" name="Images" type="file" className="file" accept="image/jpeg, image/png, image/jpg" style={{ display: 'none' }} />
+                                </div>
+                            
                             <div className="marginPerfil">
                                 <div className="formularioPerfil">
                                     <div className="col-sm m-2" >
@@ -266,10 +389,23 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                                         <input name="Telefono"  value={Telefono} onChange={onInputChange2} type="text" className="form-control" />
                                     </div>
                                 </div>
-                                <div className="col-sm m-2">
-                                    <h6 className='datosPerfil'>Contraseña:</h6>
-                                    <input name="Password" value={pass} onChange={onInputChange2} type="password" className="form-control" />
-                                </div>
+                                
+                                    {
+                                        Google === "0"?(
+                                            <div className="col-sm m-2">
+                                                <h6 className='datosPerfil'>Contraseña:</h6>
+                                                <div class="input-group mb-3">
+                                                    <input type="password" id="passwordField" className="form-control" name="Password" value={pass} onChange={onInputChange2} />
+                                                    <button className="btn btn-outline-secondary" type="button" id="toggleButton" onClick={() => togglePasswordVisibility()}>Mostrar contraseña</button>
+                                                </div>
+                                            </div>
+                                        ):
+                                        (
+                                           <></>
+                                        )
+                                    }
+                                    
+                             
                                 <div className="selectoresPerfil">
                                     <div className="col-sm m-2">
                                         <h6 className='datosPerfil'>Pais</h6>
@@ -310,6 +446,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                                 <div className='marginBottom'>
                                     <button onClick={UbicaionMessage} className="btn btn-secondary m-2" >Guardar ubicación por GPS</button>
                                     <button onClick={SaveDetailsUser} className="btn btn-success m-2" style={{ "float": "right" }}>Guardar datos</button>
+                                    
                                 </div>
                             </div>
 

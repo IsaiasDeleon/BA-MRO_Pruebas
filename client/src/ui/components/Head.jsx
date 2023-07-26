@@ -18,7 +18,7 @@ export const Head = ({ setEstadoMenu, numArticulos, numGustos,numNoti, elemntsGu
     if(user?.google == 1){
         img = user?.img;
     }else{
-        img = (img) ? `url(./assets/${img}.jpg)` : `url(./assets/Ge.jpg)`;
+        img = (img) ? `https://badgerautomation.com/MarketPlace/Server/ImagesUser/${img}` : `https://badgerautomation.com/MarketPlace/Server/Images/Ge.jpg`;
     }
     const navigate = useNavigate();
     const onLogout = () => {
@@ -135,7 +135,7 @@ export const Head = ({ setEstadoMenu, numArticulos, numGustos,numNoti, elemntsGu
                                     idU ?
                                         (
                                             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                {/* <li><Link to={"/Perfil"} className="dropdown-item" >Editar perfil</Link></li> */}
+                                                <li><Link to={"/Perfil"} className="dropdown-item" >Editar perfil</Link></li>
                                                 <li><a onClick={onLogout} className="dropdown-item" >Cerrar sesion</a></li>
                                             </ul>
                                         ) :

@@ -207,7 +207,30 @@ export const Noti = ({ notiCarrito, activeNoti, ide="" }) => {
     }else if(notiCarrito === "AlmacenUbi"){
         message= "El campo Ubicación almacen es un campo obligatorio";
         color="warning";
+    }else if(notiCarrito === "NombrePerfil"){
+        message = "El campo nombre es un campo obligatorio"
+        color="warning";
     }
+    else if(notiCarrito === "TelefonoPerfil"){
+        message = "El campo telefono es un campo obligatorio"
+        color="warning";
+    }
+    else if(notiCarrito === "passPerfil"){
+        message = "El campo contraseña es un campo obligatorio"
+        color="warning";
+    }
+    else if(notiCarrito === "direccionPerfil"){
+        message = "El campo dirección es un campo obligatorio"
+        color="warning";
+    }
+    else if(notiCarrito === "CPPerfil"){
+        message = "El campo Código postal es un campo obligatorio"
+        color="warning";
+    }else if(notiCarrito === "ImagenUsuario"){
+        message = "Su foto de usuario ha sido actualizada";
+        color = "success"
+    }
+
     
     
     return (

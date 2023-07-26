@@ -27,7 +27,7 @@ export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGusto
     if(user?.google == 1){
         img = user?.img;
     }else{
-        img = (img) ? `url(./assets/${img}.jpg)` : `url(./assets/Ge.jpg)`;
+        img = (img) ? `https://badgerautomation.com/MarketPlace/Server/ImagesUser/${img}` : `https://badgerautomation.com/MarketPlace/Server/Images/Ge.jpg`;
     }
     return (
         <>
@@ -46,10 +46,10 @@ export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGusto
                     {
                             idU ?
                                 <>
-                                    <div>
+                                    {/* <div>
                                         <Link className="nav-link">
                                         </Link>
-                                    </div>
+                                    </div> */}
                                     <div>
                                         <Link className="nav-link">
                                         </Link>
@@ -59,12 +59,7 @@ export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGusto
                                 :
                                 <>
                                     <div>
-                                        <Link className="nav-link">
-                                            <div className="text-center"><p style={{ "margin": "0" }}>Crea tu cuenta</p></div>
-                                        </Link>
-                                    </div>
-                                    <div>
-                                        <Link onClick={ () => ShowLogin() } className="nav-link">
+                                        <Link to={"/Login"} className="nav-link">
                                             <div className="text-center"><p style={{ "margin": "0" }}>Ingresar</p></div>
                                         </Link>
                                     </div>

@@ -20,7 +20,13 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
     const [imgProducts, setImgProducts] = useState(true);
     const [valueCP, setValueCP] = useState("");
     const [valueUbi, setValueUbi] = useState("");
-
+    const [Telefono, setTelefono] = useState("1");
+    const [direccion, setDireccion] = useState("");
+    const [CP, setCP] = useState("");
+    const [pais, setPais] = useState("");
+    const [estado, setEstado] = useState(1);
+    const [municipio, setMunicipio] = useState(1);
+    
     const onInputChange2 = ({ target }) => {
         const { name, value } = target;
         switch (name) {
@@ -48,13 +54,27 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             })
         }
     }
-
+    const getD = async () => {
+        let respuesta = await  HTTP.post("/getDatosGenerales2",{"IdUsuario": idU}).then((response) => {
+            return response?.data[0]
+        }) 
+        if(respuesta !== undefined){
+            setTelefono(respuesta.telefono);
+            setDireccion(respuesta.Direccion);
+            setCP(respuesta.CP);
+            setPais("Mexico");
+            setEstado(respuesta.estado);
+            setMunicipio(respuesta.municipio);
+        }
+        
+    }
     //Hacemos una peticion para obtener los primero resultados que mostraremos
     useEffect(() => {
         //Peticion para obtener los elemtos del carrito
         getItemCarrito();
         Totales()
         setMenu(2)
+        getD()
     }, [])
 
     //Funcion para eliminar elemento del carrito enviamos el id del elemento clickeado
@@ -143,13 +163,11 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             let elements = document.getElementById(`VItem${element.id}`).value;
             cantidadByProducto.push(elements);
         });
-        if(valueUbi !=="" & valueCP !==""){
-            if(idU !== undefined){
-                window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}&Ubi=${valueUbi}&CP=${valueCP}`, '_blank');
-            }
-        }else{
-            alert("Ubicacion o CP vacio")
+       
+        if(idU !== undefined){
+            window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}&Telefono=${Telefono}&direccion=${direccion}&CP=${CP}&estado=${estado}&municipio=${municipio}`, '_blank');
         }
+      
        
     }
     const navigate = useNavigate();
@@ -157,7 +175,6 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             navigate('/Inicio', {
                 replace: true
             })
-        
     }
     return (
         <>
@@ -196,28 +213,71 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             </div>
             <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} />
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-lg">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel">Compras</h1>
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <div class="alert alert-success" role="alert">
+                            <div className="alert alert-success" role="alert">
                             Realice el pago de <b>${totalPrecio}</b> al siguiente número de cuenta 123456789098765, por un total de <b>{numArticulos}</b> artículos. Una vez que el proveedor confirme su pago se le enviara su producto. se le enviara un correo con todos los datos de sus productos y proveedores 
                             </div>
-                            <div class="form-group">
+                            {/* <div class="form-group">
                                 <label htmlFor="ubicacion">Ubicación:</label>
                                 <input name="Ubicación" value={valueUbi} onChange={(e) => onInputChange2(e)}  type="text" className="form-control" id="ubicacion"/>
                             </div>
                             <div class="form-group">
                                 <label htmlFor="codigo-postal">Código Postal:</label>
                                 <input name="CP" value={valueCP} onChange={(e) => onInputChange2(e)}  className="form-control"id="codigo-postal" type="number"/>
+                            </div> */}
+                            {
+                                direccion !== ""? (
+                            <div >
+                                <div className="alert alert-primary" role="alert">
+                                    Si quiere actualizar sus datos antes de comprar visite su perfil para poder modificarlos
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <div style={{ flex: '1', padding: '10px' }}>
+                                        <h5 className='TitulosMenu'>País:</h5>
+                                        <h6 className="text-secondary OpcionesFont">México</h6>
+                                    </div>
+                                    <div style={{ flex: '1', padding: '10px' }}>
+                                        <h5 className='TitulosMenu'>Estado:</h5>
+                                        <h6 className="text-secondary OpcionesFont">{estado}</h6>
+                                    </div>
+                                    <div style={{ flex: '1', padding: '10px' }}>
+                                        <h5 className='TitulosMenu'>Municipio:</h5>
+                                        <h6 className="text-secondary OpcionesFont">{municipio}</h6>
+                                    </div>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <div style={{ flex: '2', padding: '10px' }}>
+                                        <h5 className='TitulosMenu'>Dirección:</h5>
+                                        <h6 className="text-secondary OpcionesFont">{direccion}</h6>
+                                    </div>
+                                    <div style={{ flex: '1', padding: '10px' }}>
+                                        <h5 className='TitulosMenu'>Código postal:</h5>
+                                        <h6 className="text-secondary OpcionesFont">{CP}</h6>
+                                    </div>
+                                    <div style={{ flex: '1', padding: '10px' }}>
+                                        <h5 className='TitulosMenu'>Teléfono:</h5>
+                                        <h6 className="text-secondary OpcionesFont">{Telefono}</h6>
+                                    </div>
+                                </div>
                             </div>
+                                ):
+                                (
+                                    <div className="alert alert-primary" role="alert">
+                                        Sus datos no han sido proporcionados, le sugerimos que vaya a su perfil y los ingrese
+                                    </div> 
+                                )
+                            }
+                           
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" onClick={() => Comprar()} className="btn btn-primary" data-bs-dismiss="modal">Comprar</button>
+                            <button type="button" onClick={() => Comprar()} className="btn btn-primary" data-bs-dismiss="modal" disabled={direccion !== ""? false:true} >Comprar</button>
                         </div>
                     </div>
                 </div>
