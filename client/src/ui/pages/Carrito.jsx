@@ -26,7 +26,8 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
     const [pais, setPais] = useState("");
     const [estado, setEstado] = useState(1);
     const [municipio, setMunicipio] = useState(1);
-    
+    const [latitude, setLatitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
     const onInputChange2 = ({ target }) => {
         const { name, value } = target;
         switch (name) {
@@ -65,6 +66,8 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             setPais("Mexico");
             setEstado(respuesta.estado);
             setMunicipio(respuesta.municipio);
+            setLatitude(respuesta.latitude);
+            setLongitude(respuesta.longitude)
         }
         
     }
@@ -165,7 +168,7 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
         });
        
         if(idU !== undefined){
-            window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}&Telefono=${Telefono}&direccion=${direccion}&CP=${CP}&estado=${estado}&municipio=${municipio}`, '_blank');
+            window.open(`https://ba-mro.mx/Server/CorreoComprasCarrito.php?IP=${ids}&IU=${idU}&cantidades=${cantidadByProducto.toString()}&Telefono=${Telefono}&direccion=${direccion}&CP=${CP}&estado=${estado}&municipio=${municipio}&latitude=${latitude}&longitude=${longitude}`, '_blank');
         }
       
        

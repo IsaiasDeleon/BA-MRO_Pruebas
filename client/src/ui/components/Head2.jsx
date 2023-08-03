@@ -5,6 +5,7 @@ import { types } from "../../types/types";
 import { CardGustos } from "./CardGustos";
 import { CardNoti } from "./CarNoti"
 import { CardNotiAceptar } from "./CardNotiAceptar";
+import { CardComprar } from "./CardComprar"
 export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGustos, setMenu, setClickProducto, elemntsNoti,EliminarNotiFicacion,ComprarProductoNoti,numNoti }) => {
     const { LogOut, user } = useContext(AuthContext); 
     const navigate = useNavigate(); 
@@ -73,15 +74,25 @@ export const Head2 = ({  numArticulos, numGustos, elemntsGustos, DeleteItemGusto
                                     </div>
                                     <ul style={{"maxHeight":"375px", "overflowY":"auto" }} className="dropdown-menu ulcarrito" aria-labelledby="dropdownMenuButton1">
                                     {
-                                        elemntsNoti?.map((data) => (
-                                            data.TipoNoti === "ContraOferta"?
-                                        (<CardNoti key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />):
-                                        (<CardNotiAceptar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />)
-                                            
-                                            
-                                        ))
+                                        elemntsNoti?.map((data) => {
+                                            if (data.TipoNoti === "ContraOferta") {
+                                            return (
+                                                <CardNoti key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            );
+                                            } else if (data.TipoNoti === "AceptarOferta") {
+                                            return (
+                                                <CardNotiAceptar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            );
+                                            } else if (data.TipoNoti === "Compra") {
+                                            return (
+                                                <CardComprar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            );
+                                            } else {
+                                            // Si no coincide con ninguna de las opciones anteriores, puedes mostrar un componente por defecto o simplemente devolver null
+                                            return null;
+                                            }                                       
+                                        })
                                        }
-                                     
                                     </ul>
                                 </div>
                             </div>

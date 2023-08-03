@@ -6,7 +6,7 @@ import { Noti } from '../components/Notificaciones';
 import { AuthContext } from '../../auth/AuthContext';
 const URLServer = "http://192.168.100.18:3020/"
 const HTTP = axios.create({
-    baseURL: "https://ba-mro.mx/Server/Data.php"
+    baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
 // Importa la biblioteca de crypto-js para el hash SHA-256
 const CryptoJS = require("crypto-js");
@@ -18,7 +18,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     if(user?.google == 1){
         img = user?.img;
     }else{
-        img = (img) ? `https://ba-mro.mx/Server/ImagesUser/${img}` : `https://ba-mro.mx/Server/Images/Ge.jpg`;
+        img = (img) ? `https://badgerautomation.com/MarketPlace/Server/ImagesUser/${img}` : `https://badgerautomation.com/MarketPlace/Server/Images/Ge.jpg`;
     }
     const fileInputRef = useRef();
     const [valuesEstado, setValueEstado] = useState([]);
@@ -115,7 +115,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
             getEstados()
             getMunicipios()
             getD()
-            //getCompras()
+            getCompras()
         }
         setMenu(2)
     }, [])
@@ -184,10 +184,13 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     }
     function getCompras() {
         if(idU !== undefined){
-            axios.post(URLServer + "getCompras", { "idUsuario": idU }).then((response) => {
+            console.log(idU)
+            HTTP.post("/getCompras", { "idUsuario": idU }).then((response) => {
+                console.log(response)
                 if (response.data == "0Elements") {
                     setElementsCarrito(0)
                 } else {
+                    setElementsCarrito(response.data.length)
                     setCompras(response.data)
                 }
             })
@@ -474,9 +477,9 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                             <h5 className='tituloPerfil'>Historial de compras</h5>
                             <ul>
                                 {compras.map((elementsCompras) => (
-                                    <li style={{ "margin": "5px" }}>
-                                        <p style={{ "margin": "0" }} className="fw-bold datosPerfil">{elementsCompras.Name}</p>
-                                        <p style={{ "margin": "0" }} className="text-secondary FechasPerfil">{elementsCompras.Fecha}</p>
+                                    <li key={elementsCompras.idArticulo} style={{ "margin": "5px" }}>
+                                        <p style={{ "margin": "0" }} className="fw-bold datosPerfil">{elementsCompras.nombreArticulo}</p>
+                                        <p style={{ "margin": "0" }} className="text-secondary FechasPerfil">{elementsCompras.fechaCompra}</p>
                                     </li>
                                 ))}
                             </ul>

@@ -4,7 +4,7 @@ import { AuthContext } from "../../auth/AuthContext"
 import { CardGustos } from "./CardGustos"
 import { CardNoti } from "./CarNoti"
 import { CardNotiAceptar } from "./CardNotiAceptar"
-
+import { CardComprar } from "./CardComprar"
 export const Head = ({ setEstadoMenu, numArticulos, numGustos,numNoti, elemntsGustos, DeleteItemGustos, setMenu, setClickProducto,setFiltros, filtros, elemntsNoti,EliminarNotiFicacion,ComprarProductoNoti }) => {
     const onSubmitShowMenu = () => {
         setEstadoMenu(true)
@@ -91,14 +91,25 @@ export const Head = ({ setEstadoMenu, numArticulos, numGustos,numNoti, elemntsGu
                                     <div className="text-center Notificaciones"><p style={{ "marginTop": "-3px", "color": "#fff" }} > {numNoti} </p>
                                     </div>
                                     <ul style={{"maxHeight":"375px", "overflowY":"auto" }} className="dropdown-menu ulcarrito" aria-labelledby="dropdownMenuButton1">
-                                       {
-                                        elemntsNoti?.map((data) => (
-                                            data.TipoNoti === "ContraOferta"?
-                                        (<CardNoti key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />):
-                                        (<CardNotiAceptar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />)
-                                            
-                                            
-                                        ))
+                                    {
+                                        elemntsNoti?.map((data) => {
+                                            if (data.TipoNoti === "ContraOferta") {
+                                            return (
+                                                <CardNoti key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            );
+                                            } else if (data.TipoNoti === "AceptarOferta") {
+                                            return (
+                                                <CardNotiAceptar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            );
+                                            } else if (data.TipoNoti === "Compra") {
+                                            return (
+                                                <CardComprar key={data.id} {...data} EliminarNotiFicacion={EliminarNotiFicacion} setClickProducto={setClickProducto} ComprarProductoNoti={ComprarProductoNoti} />
+                                            );
+                                            } else {
+                                            // Si no coincide con ninguna de las opciones anteriores, puedes mostrar un componente por defecto o simplemente devolver null
+                                            return null;
+                                            }                                       
+                                        })
                                        }
                                      
                                     </ul>
