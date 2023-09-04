@@ -44,6 +44,19 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     const [municipio, setMunicipio] = useState(1);
     const [latitude, setLatitude] = useState();
     const [longitude, setLongitude] = useState();
+    const [OtraUbiCheck, setOtraUbiCheck] = useState(true);
+
+    const [valuesEstado2, setValueEstado2] = useState([]);
+    const [estado2, setEstado2] = useState(1);
+    const [valueMunicipio2, setValueMunicipio2] = useState([]);
+    const [municipio2, setMunicipio2] = useState(1);
+    const [nameEstado2, setNameEstado2] = useState("");
+    const [nameMunicipio2, setNameMunicipio2] = useState("");
+    const [direccion2, setDireccion2] = useState("");
+    const [CP2, setCP2] = useState("");
+    const handleCheckboxChange = () => {
+        setOtraUbiCheck(!OtraUbiCheck);
+      };
     const onInputChange2 = ({ target }) => {
         const { name, value } = target;
         switch (name) {
@@ -62,6 +75,12 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
             case 'CP':
                 setCP(value);
                 break;
+            case 'Direccion2':
+                setDireccion2(value);
+                break;
+            case 'CP2':
+                setCP2(value);
+                break;
             case 'Pais':
                 setPais(value);
                 break;
@@ -69,8 +88,15 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                 setEstado(value);
                 getMunicipios()
                 break;
+            case 'Estado2':
+                setEstado2(value);
+                getMunicipios2()
+                break;
             case 'Municipio':
                 setMunicipio(value);
+                break;
+            case 'Municipio2':
+                setMunicipio2(value);
                 break;
         }
 
@@ -104,7 +130,17 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                         setMunicipio(respuesta.municipio);
                     }
                     
-                    
+                    setDireccion2(respuesta.Direccion2);
+                    setCP2(respuesta.CP2);
+                    setEstado2(1);
+                    if(respuesta.Estado2 !== null){
+                        setEstado2(respuesta.Estado2);
+                    }
+                    setMunicipio2(1)
+                    if(respuesta.Municipio2 !== null){
+                        setMunicipio2(respuesta.Municipio2);
+                    }
+
                     setLatitude(respuesta.latitude);
                     setLongitude(respuesta.longitude);
                 }
@@ -114,6 +150,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     
             getEstados()
             getMunicipios()
+            getMunicipios2()
             getD()
             getCompras()
         }
@@ -127,6 +164,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     function getEstados() {
         HTTP.post("/getEstado",{"N":"2"}).then((response) => {
             setValueEstado(response.data);
+            setValueEstado2(response.data);
         })
     }
     //Obtenemos el nombre del estado seleccionado
@@ -135,16 +173,31 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
             setNameEstado(response.data[0].estado)
         })
     }
+    function getNameEstado2() {
+        HTTP.post("/getNameEstado",{"idEstado": estado}).then((response) => {
+            setNameEstado2(response.data[0].estado)
+        })
+    }
     //Obtenemos todos los municipios del estado seleccionado
     function getMunicipios() {
         HTTP.post("/getMunicipio",{ "Estado": estado }).then((response) => {
             setValueMunicipio(response.data)
         })
     }
+    function getMunicipios2() {
+        HTTP.post("/getMunicipio",{ "Estado": estado2 }).then((response) => {
+            setValueMunicipio2(response.data)
+        })
+    }
     //Obtenemos el nombre del municipio seleccionado
     function getNameMunicipio() {
         HTTP.post("/getNameMunicipio",{"idMunicipio": municipio}).then((response) => {
             setNameMunicipio(response.data[0].municipio);
+        })
+    }
+    function getNameMunicipio2() {
+        HTTP.post("/getNameMunicipio",{"idMunicipio": municipio}).then((response) => {
+            setNameMunicipio2(response.data[0].municipio);
         })
     }
     //Obtenemos la ubicacion del cliente
@@ -200,10 +253,17 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
         getMunicipios();
         getNameEstado();
     }, [estado]);
+    useEffect(() => {
+        getMunicipios2();
+        getNameEstado2();
+    }, [estado2]);
 
     useEffect(() => {
         getNameMunicipio();
     }, [municipio]);
+    useEffect(() => {
+        getNameMunicipio2();
+    }, [municipio2]);
     function message(mess) {
         setNotiCarrito(`${mess}`);
         setActiveNoti(true)
@@ -234,10 +294,25 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
             message("CPPerfil")
             return;
         }
-        
+        let datos;
+        if(OtraUbiCheck === true){
+            datos={"idU":idU,"Nombre":Nombre,"Telefono":Telefono,"Password":pass,"Direccion":direccion,"CP":CP,"Estado":estado,"Municipio":municipio,"OtraUbiCheck":1 }
+        }else{
+            if(direccion2 === ""){
+                message("direccionPerfil")
+                return;
+            }
+            if(CP2 === ""){
+                message("CPPerfil")
+                return;
+            }
+            datos={"idU":idU,"Nombre":Nombre,"Telefono":Telefono,"Password":pass,"Direccion":direccion,"CP":CP,"Estado":estado,"Municipio":municipio,"Direccion2":direccion2,"CP2":CP2,"Estado2":estado2,"Municipio2":municipio2,"OtraUbiCheck":0 }
+
+        }
         if(idU !== undefined){
             
-            HTTP.post("/SaveDetailsUser",{"idU":idU,"Nombre":Nombre,"Telefono":Telefono,"Password":pass,"Direccion":direccion,"CP":CP,"Estado":estado,"Municipio":municipio }).then((response) => {
+            
+            HTTP.post("/SaveDetailsUser",datos).then((response) => {
                 if(response.data == "Actualizado"){
                     setNotiCarrito(response.data);
                     setActiveNoti(true)
@@ -330,7 +405,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                                 <h5 className="text-left tituloPerfil">Datos generales</h5>
                                 <h6 className="text-secondary datosPerfil">Correo:</h6>
                                 <h6 className='datosPerfil'>{Correo}</h6>
-                                <h6 className="text-secondary datosPerfil">Telefono:</h6>
+                                <h6 className="text-secondary datosPerfil">Teléfono:</h6>
                                 <h6 className='datosPerfil'>{Telefono}</h6>
                             </div>
                             <hr style={{ "width": "95%", "margin": "0", "marginLeft": "2.5%" }} />
@@ -342,7 +417,7 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                                 <h6 className='datosPerfil' >{nameEstado}</h6>
                                 <h6 className="text-secondary datosPerfil">Municipio:</h6>
                                 <h6 className='datosPerfil' >{nameMunicipio}</h6>
-                                <h6 className="text-secondary datosPerfil">Direccion:</h6>
+                                <h6 className="text-secondary datosPerfil">Dirección:</h6>
                                 <h6 className='datosPerfil' >{direccion}</h6>
                                 <h6 className="text-secondary datosPerfil">CP:</h6>
                                 <h6 className='datosPerfil' >{CP}</h6>
@@ -411,9 +486,9 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                              
                                 <div className="selectoresPerfil">
                                     <div className="col-sm m-2">
-                                        <h6 className='datosPerfil'>Pais</h6>
+                                        <h6 className='datosPerfil'>País</h6>
                                         <select className="form-select" name="Pais" value={pais} onChange={onInputChange} >
-                                            <option value="1">Mexico</option>
+                                            <option value="1">México</option>
                                         </select>
                                     </div>
                                     <div className="col-sm m-2">
@@ -438,14 +513,66 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
                                 <div className="formularioPerfil">
 
                                     <div className="col-sm m-2">
-                                        <h6 className='datosPerfil'>Direccion</h6>
+                                        <h6 className='datosPerfil'>Dirección</h6>
                                         <input className="form-control" type="text" name='Direccion' value={direccion} onChange={onInputChange2} />
                                     </div>
                                     <div className="col-sm m-2">
-                                        <h6 className='datosPerfil'>Codigo postal</h6>
+                                        <h6 className='datosPerfil'>Código postal</h6>
                                         <input className="form-control" type="number" name='CP' value={CP} onChange={onInputChange2} />
                                     </div>
                                 </div>
+                                <div className="form-check text-center">
+                                    <input style={{"float":"revert"}} onClick={handleCheckboxChange}  id="defaultCheck1" className="form-check-input" type="checkbox" checked={OtraUbiCheck} />
+                                    <label onClick={handleCheckboxChange} className="form-check-label datosPerfil h6" >
+                                        La dirección de envio es igual a la de facturación
+                                    </label>
+                                </div>
+                                {
+                                    OtraUbiCheck === false ?
+                                <>
+                               <div className="alert alert-primary text-center" role="alert">
+                                   Ubicación de facturación
+                                </div>
+                                <div className="selectoresPerfil">
+                                    <div className="col-sm m-2">
+                                        <h6 className='datosPerfil'>Pais</h6>
+                                        <select className="form-select" name="Pais" value={pais} onChange={onInputChange} >
+                                            <option value="1">Mexíco</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-sm m-2">
+                                        <h6 className='datosPerfil'>Estado</h6>
+                                        <select className="form-select" name="Estado2" value={estado2} onChange={onInputChange2}>
+                                            {valuesEstado2.map((Val) => (
+                                                <option key={Val.id} value={Val.id}>{Val.estado}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="col-sm m-2">
+                                        <h6 className='datosPerfil'>Municipio</h6>
+                                        <select className="form-select" name='Municipio2' value={municipio2} onChange={onInputChange2}>
+                                            {
+                                                valueMunicipio2.map((Val) => (
+                                                    <option key={Val.id} value={Val.id}>{Val.municipio} </option>
+                                                ))
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="formularioPerfil">
+
+                                    <div className="col-sm m-2">
+                                        <h6 className='datosPerfil'>Dirección</h6>
+                                        <input className="form-control" type="text" name='Direccion2' value={direccion2} onChange={onInputChange2} />
+                                    </div>
+                                    <div className="col-sm m-2">
+                                        <h6 className='datosPerfil'>Código postal</h6>
+                                        <input className="form-control" type="number" name='CP2' value={CP2} onChange={onInputChange2} />
+                                    </div>
+                                </div></>
+                                    :<></>
+                                }
+                                
                                 <div className='marginBottom'>
                                     <button onClick={UbicaionMessage} className="btn btn-secondary m-2" >Guardar ubicación por GPS</button>
                                     <button onClick={SaveDetailsUser} className="btn btn-success m-2" style={{ "float": "right" }}>Guardar datos</button>

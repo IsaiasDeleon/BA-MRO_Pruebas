@@ -15,6 +15,129 @@
   --color-input: rgb(230, 235, 243);
 }
 
+.company-info {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+ 
+}
+
+.content-index {
+  background: url('../public/assets/Bad2.webp');
+  background-position: center;
+  /* Center the image */
+  background-repeat: no-repeat;
+  /* Do not repeat the image */
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+
+
+.company-info img {
+  max-width: 20%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.company-description {
+  position: absolute;
+  top: 0;
+  right: 100px;
+  width: 55%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+}
+
+.clients-happy {
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+}
+
+.clients-happy h2 {
+  margin-bottom: 20px;
+}
+
+.client-name {
+  font-style: italic;
+}
+
+.carousel-indicators {
+  bottom: -40px;
+}
+
+.carousel-indicators li {
+  background-color: black;
+}
+
+.company-logo {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.company-logo img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.company-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.company-role {
+  font-style: italic;
+}
+
+.collaborators {
+  text-align: center;
+  margin-top: 0px;
+}
+
+.collaborator-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.collaborator-name {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.collaborator-role {
+  font-style: italic;
+}
+
+.Diesño-bottom {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.wave {
+  grid-column: 1/7;
+  grid-row: 9/11;
+  height: auto;
+  min-height: 250px;
+  margin-top: 50px;
+  overflow: hidden;
+  background: url('../public/assets/wave\ \(1\).svg');
+  background-repeat: no-repeat;
+  /* Do not repeat the image */
+  background-size: cover;
+}
 .h2Font {
   font-size: var(--big-font-size);
 }

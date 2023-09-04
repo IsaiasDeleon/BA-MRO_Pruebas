@@ -14,6 +14,7 @@ import { Login } from "../ui/pages/Login";
 import { MyProducts } from "../ui/pages/myProducts";
 import { NewProduct } from "../ui/pages/NewProduct";
 import { ComprasProduct } from "../ui/pages/Compras";
+import { Somos } from "../ui/pages/QuienesSomos";
 const URLServer = "http://192.168.100.18:3020/"
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
@@ -63,6 +64,8 @@ export const AppRoute = () => {
             //GEtCategorias
             const [dataCategrorias, setCataCategrorias] = useState([])
            
+            //Obtenemos los productos de MISPRODUCTOS filtrados
+            const [misProductos,setMisProductos] = useState([]);
             
             //FILTROS Object
             const [value, setValue] = useState([1000, 4000]);
@@ -214,6 +217,12 @@ export const AppRoute = () => {
                     })
                 }
             }
+            function head2misproductos(Busiden){
+                HTTP.post("/head2misproductos",{"idU":idU,"BusIden":Busiden}).then((response) => {
+                    console.log(response)
+                    setMisProductos(response.data);
+                })
+            }
 
             useEffect(() => {
                 if(clickProducto !== undefined){
@@ -280,9 +289,11 @@ export const AppRoute = () => {
                 <Route path="Producto" element={<Producto setIdCard={setIdCard} setIdCard2={setIdCard2} clickProducto={clickProducto} setClickProducto={setClickProducto} setMenu={setMenu} />} />
                 <Route path="/*" element={<Navigate to={"Inicio"} />} />
                 <Route path="/Login" element={<Login setMenu={setMenu}/>} />
-                <Route path="MisProductos" element={<MyProducts setMenu={setMenu}/>}/>
+                <Route path="MisProductos" element={<MyProducts setMenu={setMenu} misProductos={misProductos} />}/>
                 <Route path="ProductoNuevo" element={<NewProduct imagesArray={imagesArray} setImagenesArray={setImagenesArray} setMenu={setMenu} busquedas={busquedas} />} />
                 <Route path="Compras" element={<ComprasProduct setMenu={setMenu} />} />
+                <Route path="Somos" element={<Somos setMenu={setMenu}/>} />
+                
             </Routes>
             {
                 
@@ -302,7 +313,7 @@ export const AppRoute = () => {
                 menu === 2
                 ? (
                     <>
-                        <Head2 numArticulos={numArticulos} numGustos={numGustos} elemntsGustos={elemntsGustos} DeleteItemGustos={DeleteItemGustos} setMenu={setMenu}  setClickProducto={setClickProducto} numNoti={numNoti} elemntsNoti={elemntsNoti} EliminarNotiFicacion={EliminarNotiFicacion} ComprarProductoNoti={ComprarProductoNoti}/>
+                        <Head2 numArticulos={numArticulos} numGustos={numGustos} elemntsGustos={elemntsGustos} DeleteItemGustos={DeleteItemGustos} setMenu={setMenu}  setClickProducto={setClickProducto} numNoti={numNoti} elemntsNoti={elemntsNoti} EliminarNotiFicacion={EliminarNotiFicacion} ComprarProductoNoti={ComprarProductoNoti} head2misproductos={head2misproductos} />
                     </>
                 )
                 :(

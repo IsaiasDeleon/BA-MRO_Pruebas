@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from '../../auth/AuthContext';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Noti } from "../components/Notificaciones";
 import axios from 'axios';
 const HTTP = axios.create({
@@ -21,6 +21,16 @@ export const ComprasProduct = ({ setMenu }) => {
   const [municipio, setMunicipio] = useState(1);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+
+  const [OtraUbiCheck, setOtraUbiCheck] = useState(true);
+  const [direccion2, setDireccion2] = useState("");
+  const [CP2, setCP2] = useState("");
+  const [estado2, setEstado2] = useState(1);
+  const [municipio2, setMunicipio2] = useState(1);
+  const handleCheckboxChange = () => {
+    setOtraUbiCheck(!OtraUbiCheck);
+  };
+
   function Comprar(ContraOferta, Marca, TempodeEntrega, descripcion, empresa, nombre, numParte, Uname, Correo, imagenes, Oferta, Tipo, Telefono, direccion, CP, estado,municipio, almacen, ubiAlma, id, idU, latitude, longitude ) {
    
       let pre = 0;
@@ -42,7 +52,16 @@ export const ComprasProduct = ({ setMenu }) => {
   const getD = async () => {
     let respuesta = await  HTTP.post("/getDatosGenerales2",{"IdUsuario": idU}).then((response) => {
         return response?.data[0]
-    }) 
+    })
+    let respuesta2 = await  HTTP.post("/getDatosGenerales2Facturacion",{"IdUsuario": idU}).then((response) => {
+      return response?.data[0]
+    })
+    if(respuesta2 !== undefined){
+      setDireccion2(respuesta2.Direccion2);
+      setCP2(respuesta2.CP2);
+      setEstado2(respuesta2.estado);
+      setMunicipio2(respuesta2.municipio);
+  }
     if(respuesta !== undefined){
         setTelefono(respuesta.telefono);
         setDireccion(respuesta.Direccion);
@@ -95,6 +114,12 @@ export const ComprasProduct = ({ setMenu }) => {
     tel = "686 582 7223"
     ubi = "Calzada Robleo Industrial 460, Col. Huertas del Colorado, Mexicali, BC 21384, MX"
   }
+  const navigate = useNavigate();
+  function EditarPerfil(){
+    navigate('/Perfil', {
+      replace: true
+  })
+  }
   return (
     <div  style={{"padding":"80px 50px"}}>
       <div className="row">
@@ -130,8 +155,8 @@ export const ComprasProduct = ({ setMenu }) => {
             {
                   direccion !== ""? (
               <div >
-                  <div className="alert alert-primary" role="alert">
-                      Si quiere actualizar sus datos antes de comprar visite su perfil para poder modificarlos
+                  <div className="alert alert-primary" role="alert" onClick={() => EditarPerfil()}>
+                      Si quiere actualizar sus datos antes de comprar presione <b style={{"textDecoration": "underline red", "cursor":"pointer"}}>aquí</b>
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <div style={{ flex: '1', padding: '10px' }}>
@@ -172,6 +197,52 @@ export const ComprasProduct = ({ setMenu }) => {
                           <h6 className="text-secondary OpcionesFont">{Telefono}</h6>
                       </div>
                   </div>
+                  <div className="form-check text-center">
+                      <input style={{"float":"revert"}} onClick={handleCheckboxChange}  id="defaultCheck1" className="form-check-input" type="checkbox" checked={OtraUbiCheck} />
+                      <label onClick={handleCheckboxChange} className="form-check-label datosPerfil h6" >
+                          La dirección de envio es igual a la de facturación
+                      </label>
+                  </div>
+                  {
+                    OtraUbiCheck === false ?
+                    (
+                        direccion2 !== "" ?
+                        <>
+                            <div className="alert alert-primary text-center" role="alert">
+                                Ubicación de facturación
+                            </div>
+                            <div className="selectoresPerfil">
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>País:</h5>
+                                    <h6 className="text-secondary OpcionesFont">México</h6>
+                                </div>
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Estado:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{estado2}</h6>
+                                </div>
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Municipio:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{municipio2}</h6>
+                                </div>
+                            </div>
+                            <div className="formularioPerfil">
+                                <div style={{ flex: '2', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Dirección:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{direccion2}</h6>
+                                </div>
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Código postal:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{CP2}</h6>
+                                </div>
+                                
+                            </div>
+                        </>:
+                        <div className="alert alert-danger text-center" role="alert" onClick={() => EditarPerfil()}>
+                            La ubicación de facturación no ha sido ingresada, favor de ir a su <b style={{"textDecoration": "underline red", "cursor":"pointer"}}>perfil</b> e ingresarla
+                        </div>
+                    )
+                    :<></>
+                }
               </div>
                   ):
                   (

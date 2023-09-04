@@ -28,6 +28,14 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
     const [municipio, setMunicipio] = useState(1);
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
+    // Estado para controlar si el modal está abierto o cerrado
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const [OtraUbiCheck, setOtraUbiCheck] = useState(true);
+    const [direccion2, setDireccion2] = useState("");
+    const [CP2, setCP2] = useState("");
+    const [estado2, setEstado2] = useState(1);
+    const [municipio2, setMunicipio2] = useState(1);
     const onInputChange2 = ({ target }) => {
         const { name, value } = target;
         switch (name) {
@@ -40,6 +48,9 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
            
         }
     }
+    const handleCheckboxChange = () => {
+        setOtraUbiCheck(!OtraUbiCheck);
+      };
     //Function para obtener los elementos en el carrito
     function getItemCarrito() {
         if( idU !== undefined ){
@@ -59,6 +70,15 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
         let respuesta = await  HTTP.post("/getDatosGenerales2",{"IdUsuario": idU}).then((response) => {
             return response?.data[0]
         }) 
+        let respuesta2 = await  HTTP.post("/getDatosGenerales2Facturacion",{"IdUsuario": idU}).then((response) => {
+            return response?.data[0]
+        })
+        if(respuesta2 !== undefined){
+            setDireccion2(respuesta2.Direccion2);
+            setCP2(respuesta2.CP2);
+            setEstado2(respuesta2.estado);
+            setMunicipio2(respuesta2.municipio);
+        }
         if(respuesta !== undefined){
             setTelefono(respuesta.telefono);
             setDireccion(respuesta.Direccion);
@@ -159,6 +179,7 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
         
     }
     function Comprar(){
+        closeModal()
         let ids = [];
         let cantidadByProducto = [];
         elementsCarrito.map((element) => {
@@ -178,6 +199,22 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
             navigate('/Inicio', {
                 replace: true
             })
+    }
+   // Función para abrir el modal
+    const openModal = () => {
+        setModalOpen(true);
+    };
+
+    // Función para cerrar el modal
+    const closeModal = () => {
+        setModalOpen(false);
+    };
+    function EditarPerfil(){
+        
+        closeModal()
+      navigate('/Perfil', {
+        replace: true
+    })
     }
     return (
         <>
@@ -209,82 +246,132 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
                         <h4 className=" fw-bold text-success TotalesFont">${totalPrecio}</h4>
                     </div>
                     <div className=" text-center">
-                        <button className="btn btn-success btn-lg m-2" data-bs-toggle="modal" data-bs-target="#exampleModal" >Comprar</button>
+                        <button className="btn btn-success btn-lg m-2" onClick={openModal} >Comprar</button>
                         <button className="btn btn-light btn-lg m-2" onClick={ () => Cotizar()}>Cotizar</button>
                     </div>
                 </div>
             </div>
             <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} />
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-lg">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="exampleModalLabel">Compras</h1>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="alert alert-success" role="alert">
-                            Realice el pago de <b>${totalPrecio}</b> al siguiente número de cuenta 123456789098765, por un total de <b>{numArticulos}</b> artículos. Una vez que el proveedor confirme su pago se le enviara su producto. se le enviara un correo con todos los datos de sus productos y proveedores 
-                            </div>
-                            {/* <div class="form-group">
-                                <label htmlFor="ubicacion">Ubicación:</label>
-                                <input name="Ubicación" value={valueUbi} onChange={(e) => onInputChange2(e)}  type="text" className="form-control" id="ubicacion"/>
-                            </div>
-                            <div class="form-group">
-                                <label htmlFor="codigo-postal">Código Postal:</label>
-                                <input name="CP" value={valueCP} onChange={(e) => onInputChange2(e)}  className="form-control"id="codigo-postal" type="number"/>
-                            </div> */}
-                            {
-                                direccion !== ""? (
-                            <div >
-                                <div className="alert alert-primary" role="alert">
-                                    Si quiere actualizar sus datos antes de comprar visite su perfil para poder modificarlos
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <div style={{ flex: '1', padding: '10px' }}>
-                                        <h5 className='TitulosMenu'>País:</h5>
-                                        <h6 className="text-secondary OpcionesFont">México</h6>
-                                    </div>
-                                    <div style={{ flex: '1', padding: '10px' }}>
-                                        <h5 className='TitulosMenu'>Estado:</h5>
-                                        <h6 className="text-secondary OpcionesFont">{estado}</h6>
-                                    </div>
-                                    <div style={{ flex: '1', padding: '10px' }}>
-                                        <h5 className='TitulosMenu'>Municipio:</h5>
-                                        <h6 className="text-secondary OpcionesFont">{municipio}</h6>
-                                    </div>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <div style={{ flex: '2', padding: '10px' }}>
-                                        <h5 className='TitulosMenu'>Dirección:</h5>
-                                        <h6 className="text-secondary OpcionesFont">{direccion}</h6>
-                                    </div>
-                                    <div style={{ flex: '1', padding: '10px' }}>
-                                        <h5 className='TitulosMenu'>Código postal:</h5>
-                                        <h6 className="text-secondary OpcionesFont">{CP}</h6>
-                                    </div>
-                                    <div style={{ flex: '1', padding: '10px' }}>
-                                        <h5 className='TitulosMenu'>Teléfono:</h5>
-                                        <h6 className="text-secondary OpcionesFont">{Telefono}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                                ):
-                                (
-                                    <div className="alert alert-primary" role="alert">
-                                        Sus datos no han sido proporcionados, le sugerimos que vaya a su perfil y los ingrese
-                                    </div> 
-                                )
-                            }
-                           
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="button" onClick={() => Comprar()} className="btn btn-primary" data-bs-dismiss="modal" disabled={direccion !== ""? false:true} >Comprar</button>
-                        </div>
-                    </div>
+            {modalOpen && (
+ <div className="modal" style={{"display":"block"}} id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+ <div className="modal-dialog modal-lg">
+     <div className="modal-content">
+         <div className="modal-header">
+             <h1 className="modal-title fs-5" id="exampleModalLabel">Compras</h1>
+             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"onClick={closeModal}></button>
+         </div>
+         <div className="modal-body">
+             <div className="alert alert-success" role="alert">
+             Realice el pago de <b>${totalPrecio}</b> al siguiente número de cuenta 123456789098765, por un total de <b>{numArticulos}</b> artículos. Una vez que el proveedor confirme su pago se le enviara su producto. se le enviara un correo con todos los datos de sus productos y proveedores 
+             </div>
+             {/* <div class="form-group">
+                 <label htmlFor="ubicacion">Ubicación:</label>
+                 <input name="Ubicación" value={valueUbi} onChange={(e) => onInputChange2(e)}  type="text" className="form-control" id="ubicacion"/>
+             </div>
+             <div class="form-group">
+                 <label htmlFor="codigo-postal">Código Postal:</label>
+                 <input name="CP" value={valueCP} onChange={(e) => onInputChange2(e)}  className="form-control"id="codigo-postal" type="number"/>
+             </div> */}
+             {
+                 direccion !== ""? (
+             <div >
+                 <div className="alert alert-primary" role="alert"onClick={() => EditarPerfil()} >
+                     Si quiere actualizar sus datos antes de comprar presione <b style={{"textDecoration": "underline red", "cursor":"pointer"}}>aquí</b>
+                 </div>
+                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                     <div style={{ flex: '1', padding: '10px' }}>
+                         <h5 className='TitulosMenu'>País:</h5>
+                         <h6 className="text-secondary OpcionesFont">México</h6>
+                     </div>
+                     <div style={{ flex: '1', padding: '10px' }}>
+                         <h5 className='TitulosMenu'>Estado:</h5>
+                         <h6 className="text-secondary OpcionesFont">{estado}</h6>
+                     </div>
+                     <div style={{ flex: '1', padding: '10px' }}>
+                         <h5 className='TitulosMenu'>Municipio:</h5>
+                         <h6 className="text-secondary OpcionesFont">{municipio}</h6>
+                     </div>
+                 </div>
+                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                     <div style={{ flex: '2', padding: '10px' }}>
+                         <h5 className='TitulosMenu'>Dirección:</h5>
+                         <h6 className="text-secondary OpcionesFont">{direccion}</h6>
+                     </div>
+                     <div style={{ flex: '1', padding: '10px' }}>
+                         <h5 className='TitulosMenu'>Código postal:</h5>
+                         <h6 className="text-secondary OpcionesFont">{CP}</h6>
+                     </div>
+                     <div style={{ flex: '1', padding: '10px' }}>
+                         <h5 className='TitulosMenu'>Teléfono:</h5>
+                         <h6 className="text-secondary OpcionesFont">{Telefono}</h6>
+                     </div>
+                 </div>
+                 <div className="form-check text-center">
+                    <input style={{"float":"revert"}} onClick={handleCheckboxChange}  id="defaultCheck1" className="form-check-input" type="checkbox" checked={OtraUbiCheck} />
+                    <label onClick={handleCheckboxChange} className="form-check-label datosPerfil h6" >
+                        La dirección de envio es igual a la de facturación
+                    </label>
                 </div>
-            </div>
+                {
+                    OtraUbiCheck === false ?
+                    (
+                        direccion2 !== "" ?
+                        <>
+                            <div className="alert alert-primary text-center" role="alert">
+                                Ubicación de facturación
+                            </div>
+                            <div className="selectoresPerfil">
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>País:</h5>
+                                    <h6 className="text-secondary OpcionesFont">México</h6>
+                                </div>
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Estado:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{estado2}</h6>
+                                </div>
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Municipio:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{municipio2}</h6>
+                                </div>
+                            </div>
+                            <div className="formularioPerfil">
+                                <div style={{ flex: '2', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Dirección:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{direccion2}</h6>
+                                </div>
+                                <div style={{ flex: '1', padding: '10px' }}>
+                                    <h5 className='TitulosMenu'>Código postal:</h5>
+                                    <h6 className="text-secondary OpcionesFont">{CP2}</h6>
+                                </div>
+                                
+                            </div>
+                        </>:
+                        <div className="alert alert-danger text-center" role="alert" onClick={() => EditarPerfil()}>
+                            La ubicación de facturación no ha sido ingresada, favor de ir a su <b style={{"textDecoration": "underline red", "cursor":"pointer"}}>perfil</b> e ingresarla
+                        </div>
+                    )
+                    :<></>
+                }
+             </div>
+                 ):
+                 (
+                     <div className="alert alert-primary" role="alert" onClick={() => EditarPerfil()}>
+                         Sus datos no han sido proporcionados, le sugerimos que vaya a su <b style={{"textDecoration": "underline red", "cursor":"pointer"}}>perfil</b> y los ingrese
+                     </div> 
+                 )
+             }
+            
+         </div>
+         <div className="modal-footer">
+             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={closeModal}>Cancelar</button>
+             <button type="button" onClick={() => Comprar()} className="btn btn-primary" data-bs-dismiss="modal" disabled={direccion !== ""? false:true} >Comprar</button>
+         </div>
+     </div>
+ </div>
+</div>
+
+            )}
+           
         </>
 
     )
