@@ -33,6 +33,14 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
         AlmacenIN:"", 
         AlmaUbiIN:""
     })
+    useEffect(() => {
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(backdrop => {
+                backdrop.style.display = 'none';
+            });
+        }, 100);
+    }, []);
     const [check, setCheck] = useState(false)
     const [file, setFile] = useState(null);
 

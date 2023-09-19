@@ -27,6 +27,14 @@ export const Inicio = ({ data = [], setData, NumElementsCarrito = [], dataFiltra
         setFiltros({ ...filtros, Estado: e.target.value })
     }
     useEffect(() => {
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(backdrop => {
+                backdrop.style.display = 'none';
+            });
+        }, 100);
+    }, []);
+    useEffect(() => {
 
         //Comrpobamos que el idCard no venga vacio
         if (idCard != undefined) {

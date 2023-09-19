@@ -229,7 +229,14 @@ export const Noti = ({ notiCarrito, activeNoti, ide="" }) => {
     }else if(notiCarrito === "ImagenUsuario"){
         message = "Su foto de usuario ha sido actualizada";
         color = "success"
+    }else if(notiCarrito === "NotUserCarrito"){
+        message = "Para agregar productos a su carrito debera iniciar sesión"
+        color="warning"
+    }else if(notiCarrito === "NotUserGustos"){
+        message = "Para agregar productos a su lista de deseos debera iniciar sesión"
+        color="warning"
     }
+
 
     
     

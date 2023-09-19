@@ -20,6 +20,14 @@ export const EditarPerfil = ({ numArticulos, setMenu }) => {
     }else{
         img = (img) ? `https://badgerautomation.com/MarketPlace/Server/ImagesUser/${img}` : `https://badgerautomation.com/MarketPlace/Server/Images/Ge.jpg`;
     }
+    useEffect(() => {
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(backdrop => {
+                backdrop.style.display = 'none';
+            });
+        }, 100);
+    }, []);
     const fileInputRef = useRef();
     const [valuesEstado, setValueEstado] = useState([]);
     const [valueMunicipio, setValueMunicipio] = useState([]);

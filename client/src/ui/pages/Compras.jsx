@@ -120,6 +120,14 @@ export const ComprasProduct = ({ setMenu }) => {
       replace: true
   })
   }
+  useEffect(() => {
+    setTimeout(() => {
+        const backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(backdrop => {
+            backdrop.style.display = 'none';
+        });
+    }, 100);
+}, []);
   return (
     <div  style={{"padding":"80px 50px"}}>
       <div className="row">
