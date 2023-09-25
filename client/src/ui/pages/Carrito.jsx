@@ -48,6 +48,16 @@ export const Carrito = ({ NumElementsCarrito,setMenu }) => {
            
         }
     }
+    useEffect(() => {
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(backdrop => {
+                backdrop.style.display = 'none';
+            });
+        }, 100);
+    }, []);
+    
+    
     const handleCheckboxChange = () => {
         setOtraUbiCheck(!OtraUbiCheck);
       };

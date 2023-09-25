@@ -27,6 +27,14 @@ export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClic
             
         }
     },[])
+  useEffect(() => {
+        setTimeout(() => {
+            const backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(backdrop => {
+                backdrop.style.display = 'none';
+            });
+        }, 100);
+    }, []);
     useEffect(() => {
         if(clickProducto !== undefined){
             HTTP.post("/GetProducto", {"idProduct":clickProducto}).then((response) => {
