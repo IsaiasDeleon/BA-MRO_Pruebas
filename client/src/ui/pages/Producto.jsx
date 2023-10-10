@@ -7,7 +7,7 @@ const URLServer = "http://192.168.100.18:3020/"
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
-export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClickProducto}) => {
+export const Producto = ({actualizarCarrito, setIdCard, setIdCard2, clickProducto, setMenu, setClickProducto}) => {
 
     const [imagenes, setImagenes] = useState(`${clickProducto}`);
     const [onClickImagen, setOnClickImagen] = useState(1);
@@ -113,6 +113,10 @@ export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClic
         //   link.click();
         // });
       }
+      const handleCardClick = (clickProducto) => {
+        setIdCard2(clickProducto);
+        actualizarCarrito();
+      };
       return (
         <>
          <div className="divProducto">
@@ -156,7 +160,7 @@ export const Producto = ({setIdCard, setIdCard2, clickProducto, setMenu, setClic
                         <div className="text-end">
                             {/* <button className="btn btn-success m-1">¡Cómpralo ahora!</button> */}
                             <button className="btn btn-primary m-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">Hacer oferta</button>
-                            <button className="btn btn-dark m-1" onClick={(e) => {setIdCard2(clickProducto)}}>Agregar al carrito de compras</button>
+                            <button className="btn btn-dark m-1" onClick={(e) => handleCardClick(clickProducto)}>Agregar al carrito de compras</button>
                             <button className="btn btn-secondary m-1" onClick={(e) => { setIdCard(clickProducto)}}>Agregar a lista de favoritos</button>
                             {
                                 idU && (

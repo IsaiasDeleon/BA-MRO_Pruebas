@@ -267,41 +267,66 @@ export const AppRoute = () => {
                     })
                 }
             }, [idCard])
-        
-            useEffect(() => {
-               
-                //Comprobamos que el idCar2 no este vacio
-                if(idCard2 !== undefined){
-                    if(idU === undefined){
-                        
-                         //Actualizamo el mensaje que nos envio el server para mostrar en pantalla
-                         setNotiCarrito("NotUserCarrito");
-                         //Activamos y desactivamos la alerta para atener una animacion
-                         setActiveNoti(true);
-                         setTimeout(() => {
-                             setActiveNoti(false)
-                         }, 4000);
-                         return;
-                    }
-                    HTTP.post("/carrito", {"idU":idU,"Num":idCard2}).then((response) => {
-                        //Actualizamo el mensaje que nos envio el server para mostrar en pantalla
-                        setNotiCarrito(response.data);
-                        //Activamos y desactivamos la alerta para atener una animacion
+            
+            const actualizarCarrito = () => {
+                // Comprobamos que el idCard2 no esté vacío
+                if (idCard2 !== undefined) {
+                    if (idU === undefined) {
+                        // Actualizamos el mensaje que nos envió el servidor para mostrar en pantalla
+                        setNotiCarrito("NotUserCarrito");
+                        // Activamos y desactivamos la alerta para tener una animación
                         setActiveNoti(true);
                         setTimeout(() => {
-                            setActiveNoti(false)
+                            setActiveNoti(false);
+                        }, 4000);
+                        return;
+                    }
+                    HTTP.post("/carrito", { "idU": idU, "Num": idCard2 }).then((response) => {
+                        // Actualizamos el mensaje que nos envió el servidor para mostrar en pantalla
+                        setNotiCarrito(response.data);
+                        // Activamos y desactivamos la alerta para tener una animación
+                        setActiveNoti(true);
+                        setTimeout(() => {
+                            setActiveNoti(false);
                         }, 4000);
                         NumElementsCarrito();
-                    })
+                    });
                 }
-            },[idCard2])
+            };
+            // useEffect(() => {
+               
+            //     //Comprobamos que el idCar2 no este vacio
+            //     if(idCard2 !== undefined){
+            //         if(idU === undefined){
+                        
+            //              //Actualizamo el mensaje que nos envio el server para mostrar en pantalla
+            //              setNotiCarrito("NotUserCarrito");
+            //              //Activamos y desactivamos la alerta para atener una animacion
+            //              setActiveNoti(true);
+            //              setTimeout(() => {
+            //                  setActiveNoti(false)
+            //              }, 4000);
+            //              return;
+            //         }
+            //         HTTP.post("/carrito", {"idU":idU,"Num":idCard2}).then((response) => {
+            //             //Actualizamo el mensaje que nos envio el server para mostrar en pantalla
+            //             setNotiCarrito(response.data);
+            //             //Activamos y desactivamos la alerta para atener una animacion
+            //             setActiveNoti(true);
+            //             setTimeout(() => {
+            //                 setActiveNoti(false)
+            //             }, 4000);
+            //             NumElementsCarrito();
+            //         })
+            //     }
+            // },[idCard2])
     return (
         <>
             <Routes>
                 <Route path="Inicio" element={<Inicio data={data} dataFiltrado={dataFiltrado} setData={setData} NumElementsCarrito={NumElementsCarrito} setMenu={setMenu} NumElementsGustos={NumElementsGustos} ElementsGustos={ElementsGustos} setClickProducto={setClickProducto} acomodoCars={acomodoCars} setAcomodoCards={setAcomodoCards} setFiltros={setFiltros} filtros={filtros} />} />
                 <Route path="Carrito" element={<Carrito NumElementsCarrito={NumElementsCarrito} setMenu={setMenu} />} />
                 <Route path="Perfil" element={<EditarPerfil numArticulos={numArticulos} setMenu={setMenu} />} />
-                <Route path="Producto" element={<Producto setIdCard={setIdCard} setIdCard2={setIdCard2} clickProducto={clickProducto} setClickProducto={setClickProducto} setMenu={setMenu} />} />
+                <Route path="Producto" element={<Producto actualizarCarrito={actualizarCarrito} setIdCard={setIdCard} setIdCard2={setIdCard2} clickProducto={clickProducto} setClickProducto={setClickProducto} setMenu={setMenu} />} />
                 <Route path="/*" element={<Navigate to={"Inicio"} />} />
                 <Route path="/Login" element={<Login setMenu={setMenu}/>} />
                 <Route path="MisProductos" element={<MyProducts setMenu={setMenu} misProductos={misProductos} />}/>

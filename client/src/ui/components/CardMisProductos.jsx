@@ -7,7 +7,7 @@ import { Noti } from "./Notificaciones";
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
-export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, montoOferta, Stock, Estado, Estatus, nombre = "", Categoria, Oferta, saveOne, Fecha, empresa, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado, PDF, almacen, ubiAlma, identificadorA }) => {
+export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, montoOferta, Stock, Estado, Estatus, nombre = "", Categoria, Oferta, saveOne, Fecha, empresa, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado, PDF, almacen, ubiAlma, identificadorA,numParte }) => {
     let O = Oferta == "0" ? false : true;
     const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN,AlmacenIN,AlmaUbiIN } = useForm({
         nombreIN: nombre,
@@ -198,6 +198,7 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
             <div style={{"maxWidth":"20%", "width":"30%"}}>
                     <h6 className="text-success">Id sistema: <b className="text-dark">{id}</b> </h6>
                     <h6 className="text-success">Id alamcén:<b className="text-dark"> {identificadorA} </b> </h6>
+                    <h6 className="text-success">Num. parte:<b className="text-dark"> {numParte} </b> </h6>
                     <div class="input-div2" onDrop={(e) => inputDivChange(e,id)} >
                         <p>Arrastra y suelta tus fotos aquí o <button style={{ "padding": "5px", "background": "#000", "color": "#fff", "borderRadius": "5px" }}>selecciona el archivo</button></p>
                         <input onChange={() => inputChange(id)} id={`Images${id}`} type="file" class="file Images" multiple="multiple" accept="image/jpeg, image/png, image/jpg" />
