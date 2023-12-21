@@ -682,6 +682,16 @@ body {
  .botonCargaProduct:hover{
   padding: 9px 14px;
  }
+ .botonNewUserProveedor{
+  position:fixed;
+  right: 25px;
+  bottom:125px;
+  box-shadow: 5px 5px 5px 2px rgba(0, 0, 0, 0.3);
+  transition: .3s;
+}
+.botonNewUserProveedor:hover{
+padding: 9px 14px;
+}
  /* DISEÑO PARA PRODUCTOS */
  .divProducto{
   top: 60px;

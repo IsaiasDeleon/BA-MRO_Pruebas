@@ -9,7 +9,7 @@ const HTTP = axios.create({
 })
 export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, montoOferta, Stock, Estado, Estatus, nombre = "", Categoria, Oferta, saveOne, Fecha, empresa, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado, PDF, almacen, ubiAlma, identificadorA,numParte }) => {
     let O = Oferta == "0" ? false : true;
-    const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN,AlmacenIN,AlmaUbiIN } = useForm({
+    const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN,AlmacenIN,AlmaUbiIN, EstatusIN } = useForm({
         nombreIN: nombre,
         descripcionIN: descripcion,
         precioIN: monto,
@@ -23,7 +23,8 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
         TempodeEntregaIN: TempodeEntrega,
         TempoDdeEntregaAgotadoIN: TempoDdeEntregaAgotado,
         AlmacenIN:almacen,
-        AlmaUbiIN:ubiAlma
+        AlmaUbiIN:ubiAlma,
+        EstatusIN:Estatus
     })
     const [check, setCheck] = useState(O)
     const [file, setFile] = useState(null);
@@ -103,11 +104,11 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
             formData = new FormData();
             formData.set('file', file);
         }
-        console.log(check)
+        console.log(EstatusIN)
         saveOne(formData, {
             Categoria: categoriaIN,
             Estado: estadoIN,
-            Estatus: "1",
+            Estatus: EstatusIN,
             Fecha,
             Oferta: check == false?0:1,
             Stock: stokIN,
@@ -115,7 +116,6 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
             empresa,
             estrellas: estrellas,
             id,
-           
             monto: precioIN,
             montoOferta: precioOfertaIN,
             nombre: nombreIN,
@@ -322,6 +322,18 @@ export const CardMisProductos = ({ id, img, descripcion, estrellas, monto, monto
                         <div className="form-floating " style={{ "marginLeft": "10px" }}>
                             <input id={`AlmaUbiIN${id}`} name={`AlmaUbiIN`} value={AlmaUbiIN} onChange={(e) => cambios(e)} type="text" className="form-control" />
                             <label className='fw-bold'>Ubicación almacen:<code>*</code></label>
+                        </div>
+                    </div>
+                    <div  style={{"display":"grid","gridTemplateColumns":"50% 50%"}}>
+                        <div className="form-floating " style={{ "marginLeft": "10px" }}>
+                            
+                        </div>
+                        <div className="form-floating ">
+                            <select className="form-select" id={`EstatusIN${id}`} name="EstatusIN" onChange={(e) => cambios(e)} value={EstatusIN} aria-label="Floating label select example">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                            <label className='fw-bold'>Estatus:<code>*</code></label>
                         </div>
                     </div>
                 </div>

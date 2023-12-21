@@ -15,6 +15,7 @@ import { MyProducts } from "../ui/pages/myProducts";
 import { NewProduct } from "../ui/pages/NewProduct";
 import { ComprasProduct } from "../ui/pages/Compras";
 import { Somos } from "../ui/pages/QuienesSomos";
+import AdminUserTable from "../ui/pages/NewUserProveedor";
 const URLServer = "http://192.168.100.18:3020/"
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
@@ -26,7 +27,7 @@ export const AppRoute = () => {
             //Obtenemos el id logueado
             const { user } = useContext( AuthContext );
             let idU = user?.id;
-           
+            let IdEmpresaDB = user?.empresa ?? 0;
             //Global estado de menu
             const [estadoMenu, setEstadoMenu] = useState(false);
             //Get data 
@@ -218,7 +219,7 @@ export const AppRoute = () => {
                 }
             }
             function head2misproductos(Busiden){
-                HTTP.post("/head2misproductos",{"idU":idU,"BusIden":Busiden}).then((response) => {
+                HTTP.post("/head2misproductos",{"idU":IdEmpresaDB,"BusIden":Busiden}).then((response) => {
                     console.log(response)
                     setMisProductos(response.data);
                 })
@@ -333,7 +334,7 @@ export const AppRoute = () => {
                 <Route path="ProductoNuevo" element={<NewProduct imagesArray={imagesArray} setImagenesArray={setImagenesArray} setMenu={setMenu} busquedas={busquedas} />} />
                 <Route path="Compras" element={<ComprasProduct setMenu={setMenu} />} />
                 <Route path="Somos" element={<Somos setMenu={setMenu}/>} />
-                
+                <Route path="NewUserProveedor" element={<AdminUserTable setMenu={setMenu} />}/>
             </Routes>
             {
                 

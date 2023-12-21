@@ -74,11 +74,11 @@ export const Login = ({setMenu}) => {
        
         
        HTTP.post("/Login",{"user":correo,"pass":password}).then((response) => {
-        console.log(response)
+        console.log(response+"Hola")
         if(response.data){
             const lastPath = localStorage.getItem('lastPath') || '/';
             let data = response.data;
-            Log(data.Nombre, data.id, data.img, data.tipoUser,0);
+            Log(data.Nombre, data.id, data.img, data.tipoUser,0, data.Empresa);
             navigate(lastPath,{
                 replace:true
             })

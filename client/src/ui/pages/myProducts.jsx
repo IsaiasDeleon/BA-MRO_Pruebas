@@ -12,7 +12,7 @@ const HTTP = axios.create({
 export const MyProducts = ({ setMenu, misProductos }) => {
     const { user } = useContext(AuthContext);
     let idU = user?.id;
-
+    let IdEmpresaDB = user?.empresa ?? 0;
     const [productos, setProductos] = useState([]);
     // const [data, setData ] = useState([]);
 
@@ -21,10 +21,10 @@ export const MyProducts = ({ setMenu, misProductos }) => {
     const [idNoti, setIdNoti] = useState();
 
     function getMyProducts() {
-        HTTP.post("/getMyProducts",{"idU": idU }).then((response) => {
+        HTTP.post("/getMyProducts",{"idU": IdEmpresaDB }).then((response) => {
             //Si la respuesta es correacta modificaremos el array con los objetos que obtenga desde la busqueda
             setProductos(response.data)
-            console.log(response.data)
+            //console.log(response.data)
         })
         
     }
@@ -103,6 +103,7 @@ export const MyProducts = ({ setMenu, misProductos }) => {
             let Precio = document.getElementById(`precioIN${id}`).value;
             let PrecioOferta = document.getElementById(`precioOfertaIN${id}`).value;
             let Stock = document.getElementById(`stokIN${id}`).value;
+            let Estatus = document.getElementById(`EstatusIN${id}`).value;
             let Marca = document.getElementById(`marcaIN${id}`).value;
             let CodigoProveedor = document.getElementById(`CodigoProveedorIN${id}`).value;
             let Peso = document.getElementById(`PesoIN${id}`).value;
@@ -168,13 +169,13 @@ export const MyProducts = ({ setMenu, misProductos }) => {
                     formData.set('file', file);
                     const response = await HTTP.post("/updatePro",formData);
                     //const response = await axios.post(URLServer + 'updatePro', formData);
-                    arr = { Nombre, Categoria, Estado, Oferta, Descripcion, Precio, PrecioOferta, Stock, id, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado,almacen,almacenUbi, PDF: response.data };
+                    arr = { Nombre, Categoria, Estado,Estatus, Oferta, Descripcion, Precio, PrecioOferta, Stock, id, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado,almacen,almacenUbi, PDF: response.data };
                     datos.push(arr)
                 } catch (error) {
                     console.error(error);
                 }
             }else{
-                arr = { Nombre, Categoria, Estado, Oferta, Descripcion, Precio, PrecioOferta, Stock, id, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado,almacen,almacenUbi, PDF:1 };
+                arr = { Nombre, Categoria, Estado,Estatus, Oferta, Descripcion, Precio, PrecioOferta, Stock, id, Marca, CodigoProveedor, Peso, TempodeEntrega, TempoDdeEntregaAgotado,almacen,almacenUbi, PDF:1 };
                 datos.push(arr)
             }
         

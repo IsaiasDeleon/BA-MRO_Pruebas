@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import { CardHorizontal } from '../components/CardsHorizontal';
 import { BtnMisProductos } from '../components/butttonMisProductos';
 import { useForm } from '../../hooks/useForm';
+import { BtnCrearUser } from '../components/btnCrearUser';
 const HTTP = axios.create({
     baseURL: "https://badgerautomation.com/MarketPlace/Server/Data.php"
 })
@@ -21,6 +22,8 @@ export const Inicio = ({ data = [], setData, NumElementsCarrito = [], dataFiltra
     const { user } = useContext(AuthContext)
     let idU = user?.id;
     let tipoUser = user?.tipoUser;
+    let IdEmpresaDB = user?.empresa ?? 0;
+
     const navigate = useNavigate();
 
     function Cambio(e) {
@@ -120,16 +123,24 @@ export const Inicio = ({ data = [], setData, NumElementsCarrito = [], dataFiltra
                     </div>
                 </div>
             </div>
-            {
-                tipoUser == "2" ?
-                    <>
-                        <BtnProducto />
-                        <BtnMisProductos />
-                    </>
+            {tipoUser === "2" || tipoUser === "3" ? (
+            <>
+                <BtnProducto />
+                <BtnMisProductos />
+            </> 
+            ) : (
+            <></>
+            )}
+            {tipoUser === "4" ? (
+            <>
+                <BtnCrearUser />
+                <BtnProducto />
+                <BtnMisProductos />
+            </> 
+            ) : (
+            <></>
+            )}
 
-                    :
-                    <></>
-            }
 
             <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} />
         </div>

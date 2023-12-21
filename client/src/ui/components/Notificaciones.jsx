@@ -235,6 +235,21 @@ export const Noti = ({ notiCarrito, activeNoti, ide="" }) => {
     }else if(notiCarrito === "NotUserGustos"){
         message = "Para agregar productos a su lista de deseos debera iniciar sesión"
         color="warning"
+    }else if(notiCarrito === "UserByProveedor"){
+        message = "El campo Nombre y Contraseña es obligatorio"
+        color="warning"
+    }else if(notiCarrito === "UpdateUserByProveedor"){
+        message = "Usuario actualizado";
+        color = "success";
+    }else if(notiCarrito ===  "newUserNombre"){
+        message = "El campo Nombre se considera obligatorio";
+        color = 'warning';
+    }else if(notiCarrito === "newUserCorreo"){
+        message = "El campo Correo se considera obligatorio";
+        color = 'warning';
+    }else if(notiCarrito === "newUserPassword"){
+        message = "El campo Contraseña  se considera obligatorio";
+        color = 'warning';
     }
 
 

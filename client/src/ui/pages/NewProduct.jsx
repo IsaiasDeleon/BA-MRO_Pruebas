@@ -15,6 +15,9 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
     let estrellas = 5;
     const { user } = useContext(AuthContext);
     let idU = user?.id;
+    let tipoUser = user?.tipoUser;
+    let IdEmpresaDB = user?.empresa ?? 0;
+
     const { onInputChange, nombreIN, descripcionIN, precioIN, precioOfertaIN, stokIN, estadoIN, categoriaIN, marcaIN, CodigoProveedorIN, PesoIN, TempodeEntregaIN, TempoDdeEntregaAgotadoIN, identificadorAIN, numParteIN,AlmacenIN, AlmaUbiIN } = useForm({
         nombreIN: "",
         descripcionIN: "",
@@ -150,43 +153,43 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
 
                             HTTP.post("/updatePro",formData2).then((response2) => {
                                 let AllData = {
-                                Categoria: categoriaIN,
-                                Estado: estadoIN,
-                                Estatus: "1",
-                                Oferta: check ? 1:0,
-                                Stock: stokIN,
-                                descripcion: descripcionIN,
-                                empresa: idU,
-                                estrellas: estrellas,
-                                img: nombre,
-                                monto: precioIN,
-                                montoOferta: precioOfertaIN,
-                                nombre: nombreIN,
-                                marca: marcaIN,
-                                codigo: CodigoProveedorIN,
-                                peso: PesoIN,
-                                TiempoEn: TempodeEntregaIN,
-                                TiempoEnAg: TempoDdeEntregaAgotadoIN,
-                                PDF: response2.data,
-                                identificadorA:identificadorAIN,
-                                numParte:numParteIN,
-                                almacen:AlmacenIN,
-                                almacenUbi:AlmaUbiIN
-                            }
+                                    Categoria: categoriaIN,
+                                    Estado: estadoIN,
+                                    Estatus: "1",
+                                    Oferta: check ? 1:0,
+                                    Stock: stokIN,
+                                    descripcion: descripcionIN,
+                                    empresa: IdEmpresaDB,
+                                    estrellas: estrellas,
+                                    img: nombre,
+                                    monto: precioIN,
+                                    montoOferta: precioOfertaIN,
+                                    nombre: nombreIN,
+                                    marca: marcaIN,
+                                    codigo: CodigoProveedorIN,
+                                    peso: PesoIN,
+                                    TiempoEn: TempodeEntregaIN,
+                                    TiempoEnAg: TempoDdeEntregaAgotadoIN,
+                                    PDF: response2.data,
+                                    identificadorA:identificadorAIN,
+                                    numParte:numParteIN,
+                                    almacen:AlmacenIN,
+                                    almacenUbi:AlmaUbiIN
+                                }      
                           
-                            HTTP.post("/InsertarProducto", AllData).then((response3) => {
-                               
-                                if (response3.data === "Insertado") {
-                                    setNotiCarrito("ArticuloInsertado");
-                                    busquedas()
-                                    setActiveNoti(true)
-                                    setTimeout(() => {
-                                        setActiveNoti(false)
-                                    }, 5000);
-                                }
-                            })
+                                HTTP.post("/InsertarProducto", AllData).then((response3) => {
+                                
+                                    if (response3.data === "Insertado") {
+                                        setNotiCarrito("ArticuloInsertado");
+                                        busquedas()
+                                        setActiveNoti(true)
+                                        setTimeout(() => {
+                                            setActiveNoti(false)
+                                        }, 5000);
+                                    }
+                                })
                           
-                        })  
+                            })  
                         } else {
                             let AllData = {
                                 Categoria: categoriaIN,
@@ -195,7 +198,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                                 Oferta: check ? 1:0,
                                 Stock: stokIN,
                                 descripcion: descripcionIN,
-                                empresa: idU,
+                                empresa: IdEmpresaDB,
                                 estrellas: estrellas,
                                 img: nombre,
                                 monto: precioIN,
@@ -376,7 +379,7 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                     return;
                 }
                
-                let datos={D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,D13,D14,D15,D16,idU};
+                let datos={D1,D2,D3,D4,D5,D6,D7,D8,D9,D10,D11,D12,D13,D14,D15,D16,IdEmpresaDB};
                 console.log(datos)
                 dataExcel.push(datos);
                 InicioCelda= InicioCelda+1;
@@ -565,10 +568,16 @@ export const NewProduct = ({ setMenu, setImagenesArray, imagesArray,busquedas })
                 </div>
 
             </div>
-            <div className="m-2 text-center">
+            {tipoUser === "3" || tipoUser === "4" ? (
+             <div className="m-2 text-center">
                 <label htmlFor={`ExcelFile`} className="btn btn-success mt-3">Carga de datos masivos</label>
                 <input onChange={(e) => excelLoad(e)} id="ExcelFile" type="file" style={{ "display": "none" }} accept=".xlsx, .xls, .csv"/>
             </div>
+            ) : (
+            <></>
+            )}
+
+           
             <Noti notiCarrito={notiCarrito} activeNoti={activeNoti} />
         </>
     )
